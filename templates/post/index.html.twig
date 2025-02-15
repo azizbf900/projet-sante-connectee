@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Liste des Posts {% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <!-- Bouton "Créer un Post" -->
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{{ path('post_new') }}" class="btn btn-primary shadow-sm">Créer un Post</a>
+    </div>
+
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-12 mb-4">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    {% if post.contenu %}
+                        <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">" 
+                             
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-secondary" 
+                             style="height: 400px; font-size: 18px; font-weight: bold;">
+                            Aucune image disponible
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body text-center p-4">
+                        <h4 class="card-title fw-bold text-primary">{{ post.titre }}</h4>
+                        {% if post.legende %}
+                            <p class="card-text text-muted fst-italic" style="font-size: 16px;">"{{ post.legende }}"</p>
+                        {% endif %}
+                        <p class="card-text text-muted" style="font-size: 14px;">🕒 {{ post.datePublication|date('d/m/Y H:i') }}</p>
+
+                        <p class="card-text text-muted" style="font-size: 14px;">
+    💬 {{ post.commentaires|length }} Commentaire(s)
+</p>
+
+<h3 class="mt-4">Commentaires</h3>
+
+{% for commentaire in post.commentaires %}
+    <div class="card mt-2">
+        <div class="card-body">
+            <p>{{ commentaire.contenu }}</p>
+            <p class="text-muted" style="font-size: 12px;">Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
+        </div>
+    </div>
+{% else %}
+    <p class="text-muted">Aucun commentaire pour le moment.</p>
+{% endfor %}
+
+<!-- Bouton pour ajouter un commentaire -->
+<a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">Ajouter un commentaire</a>
+
+                        <!-- Boutons Modifier & Supprimer -->
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-outline-warning btn-sm px-4 shadow-sm">
+                                ✏️ Modifier
+                            </a>
+                            <form action="{{ path('post_delete', {'id': post.id}) }}" method="post" 
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce post ?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-4 shadow-sm">🗑️ Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center text-muted">Aucun post disponible.</p>
+        {% endfor %}
+    </div>
+    </div>
+
+    
+
+{% endblock %}

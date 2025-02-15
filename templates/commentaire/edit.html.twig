@@ -1,0 +1,13 @@
+{# templates/commentaire/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Commentaire{% endblock %}
+
+{% block body %}
+    <h1>Modifier le commentaire</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.contenu) }}
+        <button type="submit">Mettre à jour</button>
+    {{ form_end(form) }}
+    <a href="{{ path('commentaire_index') }}">Retour</a>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le post{% endblock %}
+
+{% block body %}
+    <h1>Modifier le post</h1>
+
+   {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'method': 'POST'}}) }}
+        {# Affiche les erreurs globales du formulaire #}
+        {{ form_errors(form) }}
+
+        {# Champ titre #}
+        <div>
+            {{ form_label(form.titre) }}
+            {{ form_widget(form.titre) }}
+            {{ form_errors(form.titre) }}
+        </div>
+
+        {# Champ contenu #}
+        <div>
+            {{ form_label(form.contenu) }}
+            {{ form_widget(form.contenu) }}
+            {{ form_errors(form.contenu) }}
+        </div>
+
+        {# Champ date de publication #}
+        <div>
+            {{ form_label(form.datePublication) }}
+            {{ form_widget(form.datePublication) }}
+            {{ form_errors(form.datePublication) }}
+        </div>
+
+        div>
+            {{ form_label(form.legende) }}
+            <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
+            {{ form_errors(form.legende) }}
+            <p>Caractères restants : <span id="charCount">1000</span></p>
+        </div>
+
+        
+
+    {{ form_end(form) }}
+
+    {# Lien pour retourner à la liste des posts #}
+    <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Ajouter un commentaire {% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Ajouter un commentaire pour : {{ post.titre }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-success mt-3">Envoyer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('post_show', {'id': post.id}) }}" class="btn btn-secondary mt-3">Annuler</a>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{# templates/commentaire/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Commentaire{% endblock %}
+
+{% block body %}
+    <h1>Détails du commentaire</h1>
+    <p><strong>Contenu :</strong> {{ commentaire.contenu }}</p>
+    <p><strong>Date :</strong> {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
+    <p><strong>Post :</strong> {{ commentaire.post.titre }}</p>
+    <a href="{{ path('commentaire_index') }}">Retour</a>
+{% endblock %}

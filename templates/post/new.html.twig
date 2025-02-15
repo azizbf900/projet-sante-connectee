@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Faire un nouveau post{% endblock %}
+
+{% block body %}
+    <h1>Faire un post</h1>
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+    {{ form_errors(form) }} {# Affiche les erreurs globales du formulaire #}
+
+    <div>
+        {{ form_label(form.titre) }}
+        {{ form_widget(form.titre) }}
+        {{ form_errors(form.titre) }} {# Affiche les erreurs pour le champ titre #}
+    </div>
+
+    <div>
+        {{ form_label(form.contenu) }}
+        {{ form_widget(form.contenu) }}
+        {{ form_errors(form.contenu) }} {# Affiche les erreurs pour le champ contenu #}
+    </div>
+
+    <div>
+        {{ form_label(form.datePublication) }}
+        {{ form_widget(form.datePublication) }}
+        {{ form_errors(form.datePublication) }} {# Affiche les erreurs pour le champ datePublication #}
+    </div>
+
+   <div>
+            {{ form_label(form.legende) }}
+            <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
+            {{ form_errors(form.legende) }}
+            <p>Caractères restants : <span id="charCount">1000</span></p>
+        </div>
+
+    
+
+  {{ form_end(form) }}
+
+    <a href="{{ path('post_index') }}">Retour à la liste</a>
+{% endblock %}
+
+
+
+
+{% block javascripts %}
+    {{ parent() }} {# Conserve les scripts existants #}
+    <script src="{{ asset('js/charCount.js') }}"></script>
+{% endblock %}

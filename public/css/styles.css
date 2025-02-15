@@ -1,0 +1,66 @@
+/* --- Styles généraux --- */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+/* --- Style des cartes (posts) --- */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Image des posts --- */
+.card-img-top {
+    max-height: 450px;
+    object-fit: cover;
+    border-bottom: 4px solid #007bff;
+}
+
+/* --- Titre du post --- */
+.card-title {
+    font-size: 22px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* --- Légende du post --- */
+.card-text {
+    font-size: 16px;
+    color: #555;
+}
+
+/* --- Boutons --- */
+.btn-outline-warning, .btn-outline-danger {
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 8px 20px;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffbb33;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* --- Bouton créer un post --- */
+.btn-primary {
+    background-color: #007bff;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}

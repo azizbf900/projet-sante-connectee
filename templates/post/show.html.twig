@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ post.titre }} {% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h1 class="card-title">{{ post.titre }}</h1>
+            <p class="card-text">{{ post.contenu }}</p>
+            <p class="text-muted">Publié le {{ post.datePublication|date('d/m/Y H:i') }}</p>
+
+            <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-warning">Modifier</a>
+            <form method="post" action="{{ path('post_delete', {'id': post.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+            <a href="{{ path('post_index') }}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
