@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Comptes{% endblock %}
+
+{% block content %}
+    <div id="containertop">
+        <div id="button-container">
+            <a href="{{ path('app_account_new') }}">
+                <button id="createnew">Créer un compte
+                    <ion-icon id="icon_add" name="add-circle-outline"></ion-icon>
+                </button>
+            </a>
+            <button id="exportbutton">Exporter
+                <ion-icon id="icon_export" name="download-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div id="search">
+            <input type="text" id="searchbar" placeholder="Rechercher..." oninput="filterAccounts()">
+            <ion-icon name="search"></ion-icon>
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
+    </div>
+
+    <div id="tablee">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Âge</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="accountTableBody">
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.nom }}</td>
+                        <td>{{ account.prenom }}</td>
+                        <td>{{ account.age }}</td>
+                        <td>{{ account.mail }}</td>
+                        <td>{{ account.phone }}</td>
+                        <td>{{ account.role }}</td>
+                        <td>
+                            <div id="flex">
+                                <a href="{{ path('app_account_edit', {'id': account.id}) }}">
+                                    <button id="edit-button" class="quiz-button">Modifier</button>
+                                </a>
+                                <a href="{{ path('app_account_delete', {'id': account.id}) }}"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');"
+                                    class="quiz-button delete-button">
+                                    Supprimer
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filterAccounts() {
+            let input = document.getElementById("searchbar").value.toLowerCase();
+            let rows = document.querySelectorAll("#accountTableBody tr");
+
+            rows.forEach(row => {
+                let name = row.cells[0].textContent.toLowerCase();
+                let email = row.cells[3].textContent.toLowerCase();
+                row.style.display = (name.includes(input) || email.includes(input)) ? "" : "none";
+            });
+        }
+    </script>
+{% endblock %}
