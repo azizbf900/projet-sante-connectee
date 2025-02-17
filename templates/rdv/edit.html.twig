@@ -1,13 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Rdv{% endblock %}
+{% block title %}Modifier le Rendez-vous{% endblock %}
 
 {% block body %}
-    <h1>Edit Rdv</h1>
+<style>
+    body {
+        background: url("{{ asset('img/127.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-    {{ include('rdv/_form.html.twig', {'button_label': 'Update'}) }}
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
 
-    <a href="{{ path('app_rdv_index') }}">back to list</a>
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
 
-    {{ include('rdv/_delete_form.html.twig') }}
+    .form-container {
+        margin-bottom: 20px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        font-weight: bold;
+        display: inline-block;
+        transition: 0.3s;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-update {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-update:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container">
+    <h1>Modifier le Rendez-vous</h1>
+
+    <div class="form-container">
+        {{ include('rdv/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </div>
+
+    <div class="btn-container">
+        <a href="{{ path('app_rdv_index') }}" class="btn btn-back">Retour à la liste</a>
+        {{ include('rdv/_delete_form.html.twig', { 'class': 'btn btn-delete' }) }}
+    </div>
+</div>
 {% endblock %}

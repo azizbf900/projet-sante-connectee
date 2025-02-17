@@ -1,4 +1,31 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'id': 'rdvForm'}}) }}
+
+<table>
+    <tr>
+        <td>{{ form_label(form.dateHeure, "Date et Heure") }}</td>
+        <td>{{ form_widget(form.dateHeure) }}</td>
+        <td>{{ form_errors(form.dateHeure) }}</td>
+    </tr>
+
+    <tr>
+        <td>{{ form_label(form.statut, "Statut") }}</td>
+        <td>{{ form_widget(form.statut) }}</td>
+        <td>{{ form_errors(form.statut) }}</td>
+    </tr>
+
+    <tr>
+        <td>{{ form_label(form.patient, "Patient") }}</td>
+        <td>{{ form_widget(form.patient) }}</td>
+        <td>{{ form_errors(form.patient) }}</td>
+    </tr>
+
+    <tr>
+        <td>{{ form_label(form.medecin, "Médecin") }}</td>
+        <td>{{ form_widget(form.medecin) }}</td>
+        <td>{{ form_errors(form.medecin) }}</td>
+    </tr>
+</table>
+
+<button type="submit" class="btn btn-primary">Enregistrer</button>
+
 {{ form_end(form) }}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css1/styletable.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css1/stylehome2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css1/styleform.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css1/styleshow.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css1/stylequiz.css') }}" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="grid_container">
+        <div id="head">
+            <div id="slide_nav">
+                <ion-icon class="dash" id="dash1" name="menu-outline"></ion-icon>
+                <ion-icon class="dash" id="dash2"  name="close-outline"></ion-icon>
+                <img id="img_logo" src="{{ asset('images/logo.png') }}" alt="" />
+                <h2>Sana<span style="color:rgb(23, 7, 255);">Connect</span></h2>
+            </div>
+            <header id="header">
+                <nav id="nav-bar">
+                    <ul id="ul_nav">
+                        <li id="li_nav"><a class="nav-link" href="#Home">Home</a></li>
+                        <li id="li_nav"><a class="nav-link" href="#Modules">Modules</a></li>
+                        <li id="li_nav"><a class="nav-link" href="#Evaluation">Produits</a></li>
+                        <li id="li_nav"><a class="nav-link" href="{{ path('app_anonce_index') }}">Evenement</a></li>
+                        <li id="li_nav"><a class="nav-link" href="{{ path('app_stage_index') }}">Formation</a></li>
+                        <li id="li_nav"><a class="nav-link" href="{{ path('app_evenement_index') }}">Annonces</a></li>
+                
+                        <li id="li_nav"><a class="nav-link" href="">Rendez Vous</a></li>
+                        
+                    </ul>
+                </nav>
+            </header>
+            <div id="profile">
+                <ion-icon id="notif" name="notifications-outline"></ion-icon>
+                <ion-icon id="message" name="chatbox-ellipses-outline"></ion-icon>
+                <img src="{{ asset('images/profile.png') }}" id="img_profile" alt="">
+            </div>
+        </div>
+        <div id="body">
+           <div id="menu">
+    <div id="GestionEvaluation">
+        <div id="togother">
+            <ion-icon id="logo_m" name="clipboard-outline"></ion-icon>
+            <a id="a_module" href="">Gestion Des Rendez_Vous</a>
+            <a id="a_module" href="#GestionModule"></a>
+        </div>
+        <ul id="ul_eva">
+            <li class="li_eva"><a href="{{ path('app_dossier_medical_index') }}">Dossier medical</a></li>
+            <li class="li_eva"><a href="{{ path('app_rdv_index') }}">Rendez_Vous</a></li>
+        </ul>
+    </div>
+</div>
+
+            <div id="content">
+            {% block content %}
+            
+            {% endblock  %}
+            </div>
+        </div>
+        <div id="footer"></div>
+    </div>
+    <script src="{{ asset('js1/home.js') }}"></script>
+    <script src="{{ asset('js1/quiz.js') }}"></script>
+    <script src="{{ asset('js1/export.js') }}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

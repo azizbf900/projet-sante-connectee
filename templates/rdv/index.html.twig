@@ -1,39 +1,136 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
-{% block title %}Rdv index{% endblock %}
+{% block title %}Liste des Rendez-vous{% endblock %}
 
-{% block body %}
-    <h1>Rdv index</h1>
+{% block content %}
+    <style>
+        body {
+            background: url("{{ asset('img/127.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>DateHeure</th>
-                <th>Statut</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for rdv in rdvs %}
-            <tr>
-                <td>{{ rdv.id }}</td>
-                <td>{{ rdv.dateHeure ? rdv.dateHeure|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ rdv.statut }}</td>
-                <td>{{ rdv.createdAt ? rdv.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_rdv_show', {'id': rdv.id}) }}">show</a>
-                    <a href="{{ path('app_rdv_edit', {'id': rdv.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        h1 {
+            text-align: center;
+            color: #333;
+        }
 
-    <a href="{{ path('app_rdv_new') }}">Create new</a>
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 60%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .table tr:hover {
+            background-color: #ddd;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 5px;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-create-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-create {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .btn-create:hover {
+            background-color: #218838;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination a, .pagination span {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <h1>Rdv Index</h1>
+
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>DateHeure</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for rdv in rdvs %}
+                <tr>
+                    <td>{{ rdv.dateHeure ? rdv.dateHeure|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ rdv.statut }}</td>
+                    <td class="actions">
+                        <a href="{{ path('app_rdv_show', {'id': rdv.id}) }}">Afficher</a> |
+                        <a href="{{ path('app_rdv_edit', {'id': rdv.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun rendez-vous trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+
+    <div class="pagination">
+        {{ knp_pagination_render(rdvs) }}
+    </div>
 {% endblock %}

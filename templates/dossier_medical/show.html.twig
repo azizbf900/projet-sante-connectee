@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DossierMedical{% endblock %}
+
+{% block body %}
+    <h1>DossierMedical</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ dossier_medical.id }}</td>
+            </tr>
+            <tr>
+                <th>HistoriqueMaladies</th>
+                <td>{{ dossier_medical.historiqueMaladies }}</td>
+            </tr>
+            <tr>
+                <th>Allergies</th>
+                <td>{{ dossier_medical.allergies }}</td>
+            </tr>
+            <tr>
+                <th>TraitementsEnCours</th>
+                <td>{{ dossier_medical.traitementsEnCours }}</td>
+            </tr>
+            <tr>
+                <th>GroupeSanguin</th>
+                <td>{{ dossier_medical.groupeSanguin }}</td>
+            </tr>
+            <tr>
+                <th>Poids</th>
+                <td>{{ dossier_medical.poids }}</td>
+            </tr>
+            <tr>
+                <th>Taille</th>
+                <td>{{ dossier_medical.taille }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ dossier_medical.createdAt ? dossier_medical.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dossier_medical_index') }}">back to list</a>
+
+    <a href="{{ path('app_dossier_medical_edit', {'id': dossier_medical.id}) }}">edit</a>
+
+    {{ include('dossier_medical/_delete_form.html.twig') }}
+{% endblock %}

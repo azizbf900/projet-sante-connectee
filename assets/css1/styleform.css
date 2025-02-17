@@ -1,0 +1,95 @@
+*{
+    margin: 0;
+    font-family: system-ui;
+}
+#center-text {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+}
+#backe{
+    display: flex;
+    justify-content: right;
+    margin-right: 100px;
+}
+#form {
+    max-width: 500px;
+    margin: 0px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+
+.form-control {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out;
+}
+.form-control:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+.form-control::placeholder {
+    color: #999;
+    opacity: 1;
+}
+.form-group label {
+    letter-spacing: 0.4px;
+    font-size: 1.2rem;
+}
+#submit{
+    display: flex;
+    justify-content: center;
+}
+#submitbutton {
+    /*margin-left: 80px;*/
+    border: none;
+    color: #ffffff; /* Changed color */
+    background: linear-gradient(45deg, #007BFF, #00BFFF); /* Changed background to gradient */
+    padding: 8px 35px 8px 35px;
+    letter-spacing: 0.3px;
+    font-size: 20px;
+    transition-duration: 0.5s;
+    box-shadow: 0px 4px 14px -2px rgba(0, 123, 255, 0.5); 
+    width: 40%;
+}
+#submitbutton:hover {
+    color: #000000; /* Changed hover color */
+    cursor: pointer;
+    transform: scale(1.1);
+    letter-spacing: 0.3px; /* Added letter spacing for consistency */
+}
+#backlist {
+    border: none;
+    border-radius: 30px;
+    color: #ffffff; /* Changed color */
+    background: linear-gradient(45deg, #FFC107, #FFD54F); /* Changed background to gradient with FFC107 */
+    padding: 8px 25px;
+    letter-spacing: 0.3px;
+    font-size: 20px;
+    transition-duration: 0.5s;
+    box-shadow: 0px 4px 14px -2px rgba(255, 193, 7, 0.5);
+    margin-left: 10px; /* Ensures the button appears next to the submit button */
+}
+#backlist:hover {
+    color: #000000; /* Changed hover color */
+    cursor: pointer;
+    transform: scale(1.1);
+    letter-spacing: 0.3px; /* Added letter spacing for consistency */
+}
+

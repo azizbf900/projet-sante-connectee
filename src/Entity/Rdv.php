@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RdvRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RdvRepository::class)]
@@ -14,21 +15,28 @@ class Rdv
     private ?int $id = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotNull(message: "La date et l'heure ne peuvent pas être nulles.")]
+    #[Assert\Type(\DateTimeInterface::class, message: "La valeur doit être une date et heure valide.")]
+    #[Assert\GreaterThan('today', message: "La date et l'heure doivent être ultérieures à la date d'aujourd'hui.")]
     private ?\DateTimeInterface $dateHeure = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Le statut est obligatoire.")]
+    #[Assert\Choice(
+        choices: ['en_ligne', 'presentiel'],
+        message: "Le statut doit être 'en_ligne' ou 'presentiel'."
+    )]
     private ?string $statut = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Le patient est obligatoire.")]
     private ?User $patient = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Le médecin est obligatoire.")]
     private ?User $medecin = null;
-
-    #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -76,17 +84,6 @@ class Rdv
     public function setMedecin(?User $medecin): static
     {
         $this->medecin = $medecin;
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
-    {
-        $this->createdAt = $createdAt;
         return $this;
     }
 }

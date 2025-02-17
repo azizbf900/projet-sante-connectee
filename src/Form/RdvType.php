@@ -7,6 +7,7 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RdvType extends AbstractType
@@ -17,17 +18,24 @@ class RdvType extends AbstractType
             ->add('dateHeure', null, [
                 'widget' => 'single_text',
             ])
-            ->add('statut')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
+            ->add('statut', ChoiceType::class, [
+                'choices' => [
+                    'En ligne' => 'en_ligne',
+                    'Présentiel' => 'presentiel',
+                ],
+                'expanded' => true,  // Utilise des boutons radio
+                'multiple' => false, // Une seule option possible
+                'label_attr' => ['style' => 'display: block;'], // Force l'affichage vertical
             ])
+            
+            
             ->add('patient', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
             ->add('medecin', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
         ;
     }

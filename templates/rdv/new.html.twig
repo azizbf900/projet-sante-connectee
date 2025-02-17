@@ -1,11 +1,151 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Rdv{% endblock %}
+{% block title %}Nouveau Rendez-vous{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            /*background: url("{{ asset('img/127.jpg') }}") no-repeat center center fixed;*/
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .rdv-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            text-decoration: none;
+            width: 48%;
+            transition: 0.3s ease-in-out;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Rdv</h1>
+    <header>
+        <div class="header-area ">
+            <div id="sticky-header" class="main-header-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-xl-3 col-lg-2">
+                            <div class="logo">
+                                <a href="{{ path('app_acceill') }}">
+                                    <img src="{{ asset('img/logo.png') }}" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-7">
+                            <div class="main-menu d-none d-lg-block">
+                                <nav>
+                                    <ul id="navigation">
+                                        <li><a class="active" href="{{ path('app_acceill') }}">Rendez-vous</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    {{ include('rdv/_form.html.twig') }}
+    <div class="rdv-container">
+        <h1>Créer un Nouveau Rendez-vous</h1>
+        <div class="form-section">
+            {{ include('rdv/_form.html.twig') }}
+        </div>
+        <div class="btn-container">
+            <a href="{{ path('app_rdv_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+    {% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const successMessage = document.createElement("div");
+            successMessage.innerHTML = "Rendez-vous enregistré avec succès !";
+            successMessage.style.cssText = "display: none; color: white; background: green; padding: 10px; text-align: center; border-radius: 5px; position: fixed; top: 20px; right: 20px; z-index: 1000;";
 
-    <a href="{{ path('app_rdv_index') }}">back to list</a>
+            document.body.appendChild(successMessage);
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Empêcher l'envoi immédiat du formulaire
+
+                // Afficher le message
+                successMessage.style.display = "block";
+
+                // Cacher le message après 3 secondes
+                setTimeout(() => {
+                    successMessage.style.display = "none";
+                    form.submit(); // Envoyer le formulaire après la confirmation
+                }, 2000);
+            });
+        });
+    </script>
+{% endblock %}
+
 {% endblock %}

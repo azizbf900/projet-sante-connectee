@@ -1,0 +1,49 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Anonce index{% endblock %}
+
+{% block content %}
+    <div id="containertop">
+    <div id="button-container">
+    <a href="{{ path('app_anonce_new') }}"><button id="createnew">Create new<ion-icon id="icon_add" name="add-circle-outline"></ion-icon></button></a><button id="exportbutton">Export<ion-icon id="icon_export" name="download-outline"></ion-icon></button>
+    
+
+    </div>
+    <div id="search">
+     <input type="text" id="searchbar" placeholder="Search..." oninput="filterQuizzes()"><ion-icon name="search"></ion-icon>
+     <div id="autocomplete-list" class="autocomplete-items"></div>
+    </div>
+ </div>
+
+    <div id="tablee">
+    <table id="table">
+        <thead>
+            <tr>
+                
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Categorie</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody id="quizTableBody">
+        {% for anonce in anonces %}
+            <tr>
+               
+                <td>{{ anonce.titre }}</td>
+                <td>{{ anonce.description }}</td>
+                <td>{{ anonce.categorie }}</td>
+                 <td>
+                   <div id="flex">
+                    <a href="{{ path('app_anonce_show', {'id': anonce.id}) }}"><button id="show-button" class="quiz-button">Afficher</button></a><a href="{{ path('app_anonce_edit', {'id': anonce.id}) }}"><button id="edit-button" class="quiz-button">Modifier</button></a><form method="post" action="{{ path('app_anonce_delete', {'id': anonce.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ anonce.id) }}">
+                    <button  id="delete-button" class="quiz-button">Supprimer</button>
+                    </form>
+                   </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+   </div>
+{% endblock %}
