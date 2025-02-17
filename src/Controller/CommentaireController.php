@@ -60,29 +60,30 @@ class CommentaireController extends AbstractController
 
     #[Route('/{id}/edit', name: 'commentaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(CommentaireType::class, $commentaire);
-        $form->handleRequest($request);
+{
+    $form = $this->createForm(CommentaireType::class, $commentaire);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
 
-            return $this->redirectToRoute('commentaire_index');
-        }
-
-        return $this->render('commentaire/edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->redirectToRoute('post_show', ['id' => $commentaire->getPost()->getId()]);
     }
+
+    return $this->render('commentaire/edit.html.twig', [
+        'form' => $form->createView(),
+        'commentaire' => $commentaire,
+    ]);
+ }
 
     #[Route('/{id}', name: 'commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$commentaire->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($commentaire);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('commentaire_index');
+ {
+    if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
+        $entityManager->remove($commentaire);
+        $entityManager->flush();
     }
+
+    return $this->redirectToRoute('post_show', ['id' => $commentaire->getPost()->getId()]);
+ }
 }

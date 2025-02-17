@@ -18,8 +18,7 @@
             <div class="col-12 mb-4">
                 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                     {% if post.contenu %}
-                        <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">" 
-                             
+                        <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">
                     {% else %}
                         <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-secondary" 
                              style="height: 400px; font-size: 18px; font-weight: bold;">
@@ -35,26 +34,41 @@
                         <p class="card-text text-muted" style="font-size: 14px;">🕒 {{ post.datePublication|date('d/m/Y H:i') }}</p>
 
                         <p class="card-text text-muted" style="font-size: 14px;">
-    💬 {{ post.commentaires|length }} Commentaire(s)
-</p>
+                            💬 {{ post.commentaires|length }} Commentaire(s)
+                        </p>
 
-<h3 class="mt-4">Commentaires</h3>
+                        <h3 class="mt-4">Commentaires</h3>
 
-{% for commentaire in post.commentaires %}
-    <div class="card mt-2">
-        <div class="card-body">
-            <p>{{ commentaire.contenu }}</p>
-            <p class="text-muted" style="font-size: 12px;">Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
-        </div>
-    </div>
-{% else %}
-    <p class="text-muted">Aucun commentaire pour le moment.</p>
-{% endfor %}
+                        {% for commentaire in post.commentaires %}
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <p>{{ commentaire.contenu }}</p>
+                                    <p class="text-muted" style="font-size: 12px;">Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
+                                    
+                                    <!-- Boutons Modifier & Supprimer avec icônes alternatives -->
+<div class="d-flex justify-content-center gap-3 mt-3">
+    <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-info btn-sm px-3 shadow-sm">
+        <i class="fas fa-pen"></i> <!-- Icône de crayon pour Modifier -->
+    </a>
+    <form action="{{ path('post_delete', {'id': post.id}) }}" method="post" 
+          onsubmit="return confirm('Voulez-vous vraiment supprimer ce post ?');">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+        <button type="submit" class="btn btn-danger btn-sm px-3 shadow-sm">
+            <i class="fas fa-trash"></i> <!-- Icône poubelle simple pour Supprimer -->
+        </button>
+    </form>
+</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-muted">Aucun commentaire pour le moment.</p>
+                        {% endfor %}
 
-<!-- Bouton pour ajouter un commentaire -->
-<a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">Ajouter un commentaire</a>
+                        <!-- Bouton pour ajouter un commentaire -->
+                        <a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">Ajouter un commentaire</a>
 
-                        <!-- Boutons Modifier & Supprimer -->
+                        <!-- Boutons Modifier & Supprimer du post -->
                         <div class="d-flex justify-content-center gap-3 mt-3">
                             <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-outline-warning btn-sm px-4 shadow-sm">
                                 ✏️ Modifier
@@ -73,8 +87,5 @@
             <p class="text-center text-muted">Aucun post disponible.</p>
         {% endfor %}
     </div>
-    </div>
-
-    
-
+</div>
 {% endblock %}

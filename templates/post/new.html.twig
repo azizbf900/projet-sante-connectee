@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseback.html.twig' %}
 
 {% block title %}Faire un nouveau post{% endblock %}
 
@@ -28,11 +28,12 @@
     </div>
 
    <div>
-            {{ form_label(form.legende) }}
-            <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
-            {{ form_errors(form.legende) }}
-            <p>Caractères restants : <span id="charCount">1000</span></p>
-        </div>
+    {{ form_label(form.legende) }}
+    <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
+    {{ form_errors(form.legende) }}
+    <p>Caractères restants : <span id="charCount">1000</span></p>
+    <span id="errorMessage" style="color: red; display: none;">Le contenu ne peut pas dépasser 1000 caractères.</span>
+</div>
 
     
 

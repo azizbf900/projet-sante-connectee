@@ -4,9 +4,21 @@
 {% block title %}Détails du Commentaire{% endblock %}
 
 {% block body %}
-    <h1>Détails du commentaire</h1>
-    <p><strong>Contenu :</strong> {{ commentaire.contenu }}</p>
-    <p><strong>Date :</strong> {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
-    <p><strong>Post :</strong> {{ commentaire.post.titre }}</p>
-    <a href="{{ path('commentaire_index') }}">Retour</a>
+    {% for commentaire in post.commentaires %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p class="card-text">{{ commentaire.contenu }}</p>
+            <p class="text-muted">Publié le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
+
+            <!-- Boutons Modifier et Supprimer -->
+            <div class="d-flex justify-content-start gap-2">
+                <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form method="post" action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}
