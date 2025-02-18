@@ -28,13 +28,17 @@ class AccountType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'Âge', 'class' => 'form-control']
             ])
-            ->add('mail', EmailType::class, [
-                'required' => false,
+            ->add('mail', TextType::class, [
+                'required' => false,  // Ensures no HTML5 validation for required fields
                 'attr' => ['placeholder' => 'Email', 'class' => 'form-control']
             ])
             ->add('phone', TextType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => 'Numéro de téléphone', 'class' => 'form-control']
+            ])
+            ->add('password', PasswordType::class, [
+                'required' => false,
+                'attr' => ['placeholder' => 'Mot de Passe', 'class' => 'form-control']
             ])
             ->add('role', ChoiceType::class, [
                 'choices' => [
@@ -43,13 +47,10 @@ class AccountType extends AbstractType
                 ],
                 'expanded' => false,
                 'multiple' => false,
-                'placeholder' => 'Sélectionnez un rôle',
                 'required' => false,
-                'attr' => ['class' => 'form-control']
-            ])
-            ->add('password', PasswordType::class, [
-                'required' => false,
-                'attr' => ['placeholder' => 'Mot de Passe', 'class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'data' => 'user',
+
             ]);
     }
 

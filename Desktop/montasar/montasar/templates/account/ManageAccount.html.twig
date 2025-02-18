@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ asset('assetsFront/css/signin.css') }}" />
+    <title>Manage Account</title>
+</head>
+<body>
+    <div class="manage-account-container">
+        <div class="forms-container">
+            <div class="account-form">
+    
+
+
+
+
+        
+                {{ form_start(form, {'attr': {'class': 'sign-in-form'}}) }}
+                    <h2 class="title">Manage Account</h2>
+
+                    <!-- Profile Picture -->
+                    <div class="profile-picture-container">
+                        <img src="{{ asset('images/profile.png') }}" alt="Profile Picture" class="profile-picture" id="profile-preview">
+                    </div>
+
+                    <!-- First Name -->
+                    <h3 class="password-title">Update  Prenom  </h3>
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        {{ form_widget(form.prenom, {'attr': {'placeholder': 'First Name'}}) }}
+                    </div>
+                    {{ form_errors(form.prenom) }}
+
+                    <!-- Last Name -->
+                    <h3 class="password-title">Update  Nom  </h3>
+
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        {{ form_widget(form.nom, {'attr': {'placeholder': 'Last Name'}}) }}
+                    </div>
+                    {{ form_errors(form.nom) }}
+
+                    <!-- Email -->
+                    <h3 class="password-title">Update Email </h3>
+
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        {{ form_widget(form.mail, {'attr': {'placeholder': 'Email'}}) }}
+                    </div>
+                    {{ form_errors(form.mail) }}
+
+                    <h3 class="password-title">Update Phone Number</h3>
+
+                    <!-- Phone Number -->
+                    <div class="input-field">
+                        <i class="fas fa-phone"></i>
+                        {{ form_widget(form.phone, {'attr': {'placeholder': 'Phone Number'}}) }}
+                    </div>
+                    {{ form_errors(form.phone) }}
+
+                    <!-- Age -->
+                    <h3 class="password-title">Update Age</h3>
+
+                    <div class="input-field">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ form_widget(form.age, {'attr': {'placeholder': 'Age'}}) }}
+                    </div>
+                    {{ form_errors(form.age) }}
+
+                    <!-- Password Fields -->
+                    <h3 class="password-title">Update Update</h3>
+
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        {{ form_widget(form.password, {'attr': {'placeholder': 'Password'}}) }}
+                    </div>
+                    {{ form_errors(form.password) }}
+
+                    <input type="submit" value="Update Profile" class="btn solid update-btn" />
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+
+
+    <script>
+        // Profile Picture Preview
+        const profileInput = document.getElementById('profile-image');
+        const profilePreview = document.getElementById('profile-preview');
+        
+        profileInput.addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                profilePreview.src = reader.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    </script>
+</body>
+</html>

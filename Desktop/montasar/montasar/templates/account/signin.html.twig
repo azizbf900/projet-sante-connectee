@@ -16,10 +16,12 @@
       <div class="forms-container">
         <div class="signin-signup">
 
-          <!-- 
-    - #sign in
-  -->
 
+{% for message in app.flashes('danger') %}
+    <script type="text/javascript">
+        alert("{{ message }}");
+    </script>
+{% endfor %}
           <form action="{{path('app_login')}}" class="sign-in-form" method="post">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
@@ -59,56 +61,71 @@
   -->
 
           
-<form action="{{ path('app_register') }}" method="post" class="sign-up-form">
-  <h2 class="title">Sign up</h2>
-  
-  <!-- Nom Field -->
-  <div class="input-field">
-    <i class="fas fa-user"></i>
-    <input type="text" name="nom" placeholder="Nom" required />
-  </div>
+        {{ form_start(form, {'attr': {'class': 'sign-up-form'}}) }}
+            <h2 class="title">Sign up</h2>
 
-  <!-- Prénom Field -->
-  <div class="input-field">
-    <i class="fas fa-user"></i>
-    <input type="text" name="prenom" placeholder="Prénom" required />
-  </div>
+            <!-- Nom Field -->
+            <div class="input-field">
+                <i class="fas fa-user"></i>
+                {{ form_widget(form.nom, {'attr': {'placeholder': 'Nom'}}) }}
+            </div>
+            {{ form_errors(form.nom) }}
 
-  <!-- Age Field -->
-  <div class="input-field">
-    <i class="fas fa-calendar-alt"></i>
-    <input type="number" name="age" placeholder="Age" required />
-  </div>
+            <!-- Prénom Field -->
+            <div class="input-field">
+                <i class="fas fa-user"></i>
+                {{ form_widget(form.prenom, {'attr': {'placeholder': 'Prénom'}}) }}
+            </div>
+            {{ form_errors(form.prenom) }}
 
-  <!-- Email Field -->
-  <div class="input-field">
-    <i class="fas fa-envelope"></i>
-    <input type="email" name="email" placeholder="Email" required />
-  </div>
+            <!-- Age Field -->
+            <div class="input-field">
+                <i class="fas fa-calendar-alt"></i>
+                {{ form_widget(form.age, {'attr': {'placeholder': 'Age'}}) }}
+            </div>
+            {{ form_errors(form.age) }}
 
-  <!-- Phone Field -->
-  <div class="input-field">
-    <i class="fas fa-phone"></i>
-    <input type="text" name="phone" placeholder="Numéro de téléphone" required />
-  </div>
+            <!-- Email Field -->
+            <div class="input-field">
+                <i class="fas fa-envelope"></i>
+                {{ form_widget(form.mail, {'attr': {'placeholder': 'Email'}}) }}
+            </div>
+            {% for error in form.mail.vars.errors %}
+                <div class="text-danger">{{ error.message }}</div>
+            {% endfor %}
 
-  <!-- Password Field -->
-  <div class="input-field">
-    <i class="fas fa-lock"></i>
-    <input type="password" name="password" placeholder="Password" required />
-  </div>
-  
-  <input type="submit" class="btn" value="Sign up" />
-  
-  <p class="social-text">Or Sign up with social platforms</p>
-  
-  <div class="social-media">
-    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-    <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
-    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-  </div>
-</form>
+            <!-- Phone Field -->
+            <div class="input-field">
+                <i class="fas fa-phone"></i>
+                {{ form_widget(form.phone, {'attr': {'placeholder': 'Numéro de téléphone'}}) }}
+            </div>
+            {{ form_errors(form.phone) }}
+
+            <!-- Password Field -->
+            <div class="input-field">
+                <i class="fas fa-lock"></i>
+                {{ form_widget(form.password, {'attr': {'placeholder': 'Password'}}) }}
+            </div>
+            {% for error in form.password.vars.errors %}
+                <div class="text-danger">{{ error.message }}</div>
+            {% endfor %}
+
+            <div style="display: none;">
+                {{ form_widget(form.role) }}
+            </div>
+            <input type="submit" class="btn" value="Sign up" />
+
+            <p class="social-text">Or Sign up with social platforms</p>
+
+            <div class="social-media">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        {{ form_end(form) }}
+
+
 
         </div>
       </div>

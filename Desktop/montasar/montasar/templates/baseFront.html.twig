@@ -181,6 +181,7 @@
                 <img src="{{ asset('images/profile.png') }}" class="user-icon" alt="">
                 <div class="dropdown-content">
                     <p>{{ app.session.get('user').nom }} {{ app.session.get('user').prenom }}</p>
+                    <a href="{{ path('app_manage_account')}}" class="btn solid">Manage Account</a>
                     <a href="{{ path('app_logout') }}" class="btn solid">Logout</a>
                 </div>
             </div>

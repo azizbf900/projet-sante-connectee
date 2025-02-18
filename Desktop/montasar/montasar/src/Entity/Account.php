@@ -5,9 +5,15 @@ namespace App\Entity;
 use App\Repository\AccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
-class Account
+#[UniqueEntity(fields: ['mail'], message: "Cet email est déjà utilisé.")]
+#[UniqueEntity(fields: ['password'], message: "Ce mot de passe est déjà utilisé.")]
+class Account implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -49,6 +55,30 @@ class Account
     #[Assert\Length(min: 6, minMessage: "Le mot de passe doit comporter au moins {{ limit }} caractères.")]
     private ?string $password = null;
 
+
+
+
+    public function getSalt(): ?string
+    {
+        return null; // Salt is not needed with modern algorithms (bcrypt, argon2)
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Not needed for now if you don't store sensitive data other than the password
+    }
+
+    public function getUserIdentifier(): string
+    {
+         return "";
+    }
+
+
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
     // Getters and Setters
     public function getId(): ?int
     {
@@ -73,7 +103,7 @@ class Account
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(?string $prenom): self
     {
         $this->prenom = $prenom;
         return $this;
@@ -84,7 +114,7 @@ class Account
         return $this->age;
     }
 
-    public function setAge(int $age): self
+    public function setAge(?int $age): self
     {
         $this->age = $age;
         return $this;
@@ -100,7 +130,7 @@ class Account
         {
             return $this->password;
         }
-    public function setMail(string $mail): self
+    public function setMail(?string $mail): self
     {
         $this->mail = $mail;
         return $this;
@@ -111,7 +141,7 @@ class Account
         return $this->phone;
     }
 
-    public function setPhone(int $phone): self
+    public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
         return $this;
@@ -122,14 +152,14 @@ class Account
         return $this->role;
     }
 
-    public function setRole(string $role): self
+    public function setRole(?string $role): self
     {
         $this->role = $role;
         return $this;
     }
 
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
         return $this;
