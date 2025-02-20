@@ -1,4 +1,51 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<h1>Créer un Nouveau Dossier Médical</h1>
+
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+<table>
+    <tr>
+        <td>{{ form_label(form.historiqueMaladies, "Historique maladies") }}</td>
+        <td>{{ form_widget(form.historiqueMaladies) }}</td>
+        <td>{{ form_errors(form.historiqueMaladies) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.allergies, "Allergies") }}</td>
+        <td>{{ form_widget(form.allergies) }}</td>
+        <td>{{ form_errors(form.allergies) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.traitementsEnCours, "Traitements en cours") }}</td>
+        <td>{{ form_widget(form.traitementsEnCours) }}</td>
+        <td>{{ form_errors(form.traitementsEnCours) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.groupeSanguin, "Groupe sanguin") }}</td>
+        <td>{{ form_widget(form.groupeSanguin) }}</td>
+        <td>{{ form_errors(form.groupeSanguin) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.poids, "Poids") }}</td>
+        <td>{{ form_widget(form.poids) }}</td>
+        <td>{{ form_errors(form.poids) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.taille, "Taille") }}</td>
+        <td>{{ form_widget(form.taille) }}</td>
+        <td>{{ form_errors(form.taille) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.createdAt, "Created at") }}</td>
+        <td>{{ form_widget(form.createdAt) }}</td>
+        <td>{{ form_errors(form.createdAt) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.patient, "Patient") }}</td>
+        <td>{{ form_widget(form.patient) }}</td>
+        <td>{{ form_errors(form.patient) }}</td>
+    </tr>
+</table>
+
+<button type="submit" class="btn btn-primary">Save</button>
+
+
 {{ form_end(form) }}

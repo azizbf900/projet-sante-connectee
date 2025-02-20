@@ -25,7 +25,7 @@ class DossierMedicalType extends AbstractType
             ])
             ->add('patient', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
         ;
     }
