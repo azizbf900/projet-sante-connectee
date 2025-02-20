@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
+use App\Entity\Categorie;
 use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,38 +29,44 @@ class ProduitController extends AbstractController
         $this->entityManager = $entityManager;
     }
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(ProduitRepository $produitRepository, CategorieRepository $categorieRepository, Request $request): Response
-    {
-         // Créer un nouvel objet Produit
-         $produit = new Produit();
-        
-         // Récupérer toutes les catégories
-         $categories = $categorieRepository->findAll();
-         // Préparer les catégories sous forme de tableau clé-valeur
-         $categoriesArray = [];
-         foreach ($categories as $categorie) {
-             $categoriesArray[$categorie->getName()] = $categorie;
-         }
- 
-         // Créer le formulaire en passant les catégories comme option
-         $form = $this->createForm(ProduitType::class, $produit, [
-             'categories' => $categoriesArray,
-         ]);
- 
-         // Gérer la soumission du formulaire
-         $form->handleRequest($request);
-         if ($form->isSubmitted() && $form->isValid()) {
-             $entityManager = $this->getDoctrine()->getManager();
-             $entityManager->persist($produit);
-             $entityManager->flush();
- 
-             return $this->redirectToRoute('app_produit');
-         }
- 
-         return $this->render('produit/index.html.twig', [
-             'produits' => $produitRepository->findAll(),
-             'form' => $form->createView(),
-         ]);
+    public function index(
+        ProduitRepository $produitRepository,
+        CategorieRepository $categorieRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Créer un nouvel objet Produit
+        $produit = new Produit();
+
+        // Récupérer toutes les catégories
+        $categories = $categorieRepository->findAll();
+
+        // Préparer les catégories sous forme de tableau clé-valeur
+        $categoriesArray = [];
+        foreach ($categories as $categorie) {
+            $categoriesArray[$categorie->getName()] = $categorie;
+        }
+
+        // Créer le formulaire en passant les catégories comme option
+        $form = $this->createForm(ProduitType::class, $produit, [
+            'categories' => $categoriesArray,
+        ]);
+
+        // Gérer la soumission du formulaire
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($produit);
+            $entityManager->flush();
+
+            // Rediriger vers la page des produits après la création
+            return $this->redirectToRoute('produit_index');
+        }
+
+        // Rendre la vue avec la liste des produits et le formulaire
+        return $this->render('produit/backend/index.html.twig', [
+            'produits' => $produitRepository->findAll(),
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
@@ -68,8 +75,14 @@ class ProduitController extends AbstractController
         // Créer un nouvel objet Produit
         $produit = new Produit();
 
-        // Créer le formulaire
-        $form = $this->createForm(ProduitType::class, $produit);
+        // Récupérer les catégories depuis la base de données
+        $categorieRepository = $this->entityManager->getRepository(Categorie::class);
+        $categories = $categorieRepository->findAll();
+
+        // Créer le formulaire en passant les catégories
+        $form = $this->createForm(ProduitType::class, $produit, [
+            'categories' => $categories,  // Passer les catégories au formulaire
+        ]);
 
         // Gérer la soumission du formulaire
         $form->handleRequest($request);
@@ -88,7 +101,7 @@ class ProduitController extends AbstractController
         }
 
         // Rendre la vue avec le formulaire
-        return $this->render('produit/create.html.twig', [
+        return $this->render('produit/backend/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -96,37 +109,37 @@ class ProduitController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(Produit $produit): Response 
     {
-        return $this->render('produit/show.html.twig', [
+        return $this->render('produit/backend/_form.html.twig', [
             'Produit' => $produit,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Produit $produit): Response
+    #[Route('/produit/{id}/edit', name: 'produit_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', 'Produit modifié avec succès.');
-            return $this->redirectToRoute('produit_edit', ['id' => $produit->getId()]);
+            $entityManager->flush();
+            $this->addFlash('success', 'Produit mis à jour avec succès');
+            return $this->redirectToRoute('produit_index');
         }
 
-        return $this->render('produit/edit.html.twig', [
-            'produit' => $produit,
+        return $this->render('produit/backend/edit.html.twig', [
             'form' => $form->createView(),
+            'produit' => $produit,
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/produit/{id}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit): Response
     {
+        // Validation du token CSRF
         if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($produit);
-            $entityManager->flush();
+            // Suppression du produit en utilisant l'EntityManager
+            $this->entityManager->remove($produit);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Produit supprimé avec succès.');
         }
@@ -134,4 +147,42 @@ class ProduitController extends AbstractController
         return $this->redirectToRoute('produit_index');
     }
 
+
+}
+
+#[Route('/admin', name: 'admin')]
+class ProduitFrontendController extends AbstractController
+{
+    // Affichage de toutes les catégories
+    #[Route('/categories', name: 'produit_categories')]
+    public function index(CategorieRepository $categorieRepository): Response
+    {
+        $categories = $categorieRepository->findAll();
+        return $this->render('produit/index.html.twig', [
+            'categories' => $categories,
+        ]);
+    }
+
+    // Affichage des produits d'une catégorie
+    #[Route('/category/{id}', name: 'produit_category')]
+    public function showCategory($id, ProduitRepository $produitRepository, CategorieRepository $categorieRepository): Response
+    {
+        $category = $categorieRepository->find($id);
+        $produits = $produitRepository->findBy(['category' => $category]);
+
+        return $this->render('produit/category.html.twig', [
+            'produits' => $produits,
+            'category' => $category,
+        ]);
+    }
+
+    // Affichage du détail d'un produit
+    #[Route('/product/{id}', name: 'produit_show')]
+    public function showProduct($id, ProduitRepository $produitRepository): Response
+    {
+        $produit = $produitRepository->find($id);
+        return $this->render('produit/show.html.twig', [
+            'produit' => $produit,
+        ]);
+    }
 }

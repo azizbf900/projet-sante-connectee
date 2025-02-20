@@ -13,36 +13,79 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ProduitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', TextType::class, [
-                'label' => 'Nom du produit',
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description du produit',
-            ])
-            ->add('Prix', NumberType::class, [
-                'label' => 'Prix',
-            ])
-            ->add('quantite', IntegerType::class, [
-                'label' => 'Quantité en stock',
-            ])
-            ->add('categorie', EntityType::class, [
-                'label' => 'Catégorie',
-                'class' => Categorie::class, // La classe de l'entité Categorie
-                'choice_label' => 'name',    // Afficher le nom de la catégorie
-                'choices' => $options['categories'], // Passer les catégories en option
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Ajouter le produit',
-            ]);
+        ->add('nom', TextType::class, [
+            'label' => 'Nom du produit',
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Le nom du produit ne peut pas être vide.',
+                ]),
+                new Assert\Length([
+                    'min' => 3,
+                    'minMessage' => 'Le nom du produit doit contenir au moins {{ limit }} caractères.',
+                ]),
+            ]
+        ])
+        ->add('description', TextareaType::class, [
+            'label' => 'Description du produit',
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'La description ne peut pas être vide.',
+                ]),
+                new Assert\Length([
+                    'min' => 10,
+                    'minMessage' => 'La description du produit doit contenir au moins {{ limit }} caractères.',
+                ]),
+            ]
+        ])
+        ->add('prix', NumberType::class, [
+            'label' => 'Prix',
+            'attr' => ['min' => 0, 'step' => '0.01'], // Autoriser les décimales
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Le prix ne peut pas être vide.',
+                ]),
+                new Assert\GreaterThan([
+                    'value' => 0,
+                    'message' => 'Le prix doit être un nombre positif.',
+                ]),
+            ],
+        ])
+        ->add('quantite', IntegerType::class, [
+            'label' => 'Quantité en stock',
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'La quantité ne peut pas être vide.',
+                ]),
+                new Assert\GreaterThan([
+                    'value' => 0,
+                    'message' => 'La quantité doit être supérieure à zéro.',
+                ]),
+            ]
+        ])
+        ->add('categorie', EntityType::class, [
+            'label' => 'Catégorie',
+            'class' => Categorie::class,
+            'choice_label' => 'name',
+            'choices' => $options['categories'],
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Veuillez sélectionner une catégorie.',
+                ]),
+            ]
+        ])
+        ->add('save', SubmitType::class, [
+            'label' => 'Ajouter le produit',
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

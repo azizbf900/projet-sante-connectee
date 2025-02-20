@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Nouveau Produit{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-gradient-primary text-white text-center">
+            <h2 class="fw-bold">Créer un Nouveau Produit</h2>
+        </div>
+        <div class="card-body p-5">
+            <div class="form-container shadow-lg p-4 rounded-4">
+                {{ include('produit/backend/_form.html.twig', {'attr': {'class': 'form-style'}}) }}
+            </div>
+            {% for message in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger mt-3">{{ message }}</div>
+            {% endfor %}
+        </div>
+        <div class="card-footer text-center">
+            <a href="{{ path('produit_index') }}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des produits
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Conteneur principal */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Carte stylisée avec gradient et effet 3D */
+.card {
+    background: linear-gradient(145deg, #ffffff, #e0f7fa);
+    border-radius: 15px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    transform: rotateX(0deg);
+    animation: cardPop 1s ease-out;
+}
+
+/* Animation de "pop" de la carte */
+@keyframes cardPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Titre dans la carte */
+.card-header h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+}
+
+/* Formulaire */
+.form-container {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Effet de zoom sur le formulaire */
+.form-container:hover {
+    transform: scale(1.05);
+}
+
+/* Animation d'entrée pour les champs de saisie */
+input, select, textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    transform: scale(1.02);
+}
+
+/* Validation des champs */
+.invalid-feedback {
+    color: #e74c3c;
+    font-size: 0.9rem;
+}
+
+.valid-feedback {
+    color: #27ae60;
+    font-size: 0.9rem;
+}
+
+/* Bouton principal */
+.btn-outline-light {
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-light:hover {
+    background-color: #1e88e5;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(30, 136, 229, 0.5);
+}
+
+/* Animation globale de la page */
+@keyframes fadeInPage {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+body {
+    animation: fadeInPage 1s ease-out;
+}
+
+/* Style des alertes */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+}
+
+/* Paddings et marges pour les éléments */
+.card-body {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.card-footer {
+    padding-top: 20px;
+}
+
+h4 {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+</style>
+
+<!-- Script de validation du formulaire -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.form-style');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        });
+
+        input.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let valid = true;
+        inputs.forEach(input => {
+            if (input.value === '') {
+                valid = false;
+                input.classList.add('is-invalid');
+            }
+        });
+
+        if (valid) {
+            form.submit(); // Si tous les champs sont valides, soumettre le formulaire
+        } else {
+            alert('Veuillez remplir tous les champs obligatoires');
+        }
+    });
+});
+</script>
+
+{% endblock %}
