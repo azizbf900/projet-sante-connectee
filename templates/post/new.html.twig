@@ -1,6 +1,11 @@
-{% extends 'baseback.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Faire un nouveau post{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }} {# Conserve les styles existants #}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}"> {# Ajoute le fichier CSS personnalisé #}
+{% endblock %}
 
 {% block body %}
     <h1>Faire un post</h1>
@@ -27,23 +32,18 @@
         {{ form_errors(form.datePublication) }} {# Affiche les erreurs pour le champ datePublication #}
     </div>
 
-   <div>
-    {{ form_label(form.legende) }}
-    <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
-    {{ form_errors(form.legende) }}
-    <p>Caractères restants : <span id="charCount">1000</span></p>
-    <span id="errorMessage" style="color: red; display: none;">Le contenu ne peut pas dépasser 1000 caractères.</span>
-</div>
+    <div>
+        {{ form_label(form.legende) }}
+        <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
+        {{ form_errors(form.legende) }}
+        <p>Caractères restants : <span id="charCount">1000</span></p>
+        <span id="errorMessage" style="color: red; display: none;">Le contenu ne peut pas dépasser 1000 caractères.</span>
+    </div>
 
-    
-
-  {{ form_end(form) }}
+    {{ form_end(form) }}
 
     <a href="{{ path('post_index') }}">Retour à la liste</a>
 {% endblock %}
-
-
-
 
 {% block javascripts %}
     {{ parent() }} {# Conserve les scripts existants #}

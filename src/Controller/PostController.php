@@ -89,7 +89,13 @@ public function edit(Request $request, Post $post, EntityManagerInterface $entit
     $form = $this->createForm(PostType::class, $post);
     $form->handleRequest($request);
 
+    if ($form->isSubmitted()) {
+        dump('Formulaire soumis'); // Vérifie si le formulaire est soumis
+    }
+
     if ($form->isSubmitted() && $form->isValid()) {
+        dump('Formulaire valide'); // Vérifie si le formulaire est valide
+
         // Récupération du fichier image
         $imageFile = $form->get('contenu')->getData();
 
@@ -101,15 +107,24 @@ public function edit(Request $request, Post $post, EntityManagerInterface $entit
                     $this->getParameter('uploads_directory'), // Défini dans services.yaml
                     $newFilename
                 );
+                // Supprime l'ancienne image si elle existe
+                if ($post->getContenu()) {
+                    $oldFilePath = $this->getParameter('uploads_directory') . '/' . $post->getContenu();
+                    if (file_exists($oldFilePath)) {
+                        unlink($oldFilePath);
+                    }
+                }
                 $post->setContenu($newFilename);
             } catch (FileException $e) {
                 $this->addFlash('error', "Erreur lors de l'upload de l'image.");
+                return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
             }
         }
 
         // Enregistrement en base de données
         $entityManager->flush();
 
+        $this->addFlash('success', 'Le post a été modifié avec succès.');
         return $this->redirectToRoute('post_index');
     }
 
@@ -119,17 +134,22 @@ public function edit(Request $request, Post $post, EntityManagerInterface $entit
     ]);
 }
 
-
-    #[Route('/post/{id}/delete', name: 'post_delete', methods: ['POST'])]
-    public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
-   {
-      if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-          $entityManager->remove($post);
-          $entityManager->flush();
-        }
-
-      return $this->redirectToRoute('post_index');
+#[Route('/post/{id}/delete', name: 'post_delete', methods: ['POST'])]
+public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+{
+    // Supprimer les commentaires associés au post
+    foreach ($post->getCommentaires() as $commentaire) {
+        $entityManager->remove($commentaire);
     }
+
+    if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
+        $entityManager->remove($post);
+        $entityManager->flush();
+        $this->addFlash('success', 'Post supprimé avec succès.');
+    }
+
+    return $this->redirectToRoute('post_index');
+}
 
 
 

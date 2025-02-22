@@ -151,7 +151,8 @@
 
     
         {% block javascripts %}
-            
+            {% block import %}{{ importmap('app') }}{% endblock %}
+
         {% endblock %}
 
     </body>

@@ -2,10 +2,15 @@
 
 {% block title %}Modifier le post{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }} {# Conserve les styles existants #}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}"> {# Ajoute le fichier CSS personnalisé #}
+{% endblock %}
+
 {% block body %}
     <h1>Modifier le post</h1>
 
-   {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'method': 'POST'}}) }}
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'method': 'POST'}}) }}
         {# Affiche les erreurs globales du formulaire #}
         {{ form_errors(form) }}
 
@@ -16,11 +21,19 @@
             {{ form_errors(form.titre) }}
         </div>
 
-        {# Champ contenu #}
+        {# Champ contenu (image) #}
         <div>
             {{ form_label(form.contenu) }}
             {{ form_widget(form.contenu) }}
             {{ form_errors(form.contenu) }}
+
+            {# Afficher l'image actuelle si elle existe #}
+            {% if post.contenu %}
+                <div class="mt-3">
+                    <p>Image actuelle :</p>
+                    <img src="{{ asset('uploads/' ~ post.contenu) }}" alt="Image du post" style="max-width: 200px;">
+                </div>
+            {% endif %}
         </div>
 
         {# Champ date de publication #}
@@ -30,17 +43,50 @@
             {{ form_errors(form.datePublication) }}
         </div>
 
-        div>
+        {# Champ légende #}
+        <div>
             {{ form_label(form.legende) }}
             <textarea id="legende" name="{{ field_name(form.legende) }}" maxlength="1000" rows="3">{{ form.legende.vars.value }}</textarea>
             {{ form_errors(form.legende) }}
             <p>Caractères restants : <span id="charCount">1000</span></p>
         </div>
 
-        
-
+        {# Symfony génère automatiquement le bouton de soumission #}
+        {{ form_widget(form) }}
     {{ form_end(form) }}
 
     {# Lien pour retourner à la liste des posts #}
     <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }} {# Conserve les scripts du template de base #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('legende');
+            const charCount = document.getElementById('charCount');
+            const maxLength = 1000;
+
+            // Initialiser le compteur avec la valeur actuelle du texte
+            charCount.textContent = maxLength - textarea.value.length;
+
+            textarea.addEventListener('input', function() {
+                const remaining = maxLength - textarea.value.length;
+                charCount.textContent = remaining;
+
+                // Optionnel : Changer la couleur du compteur si la limite est proche
+                if (remaining <= 20) {
+                    charCount.style.color = 'red';
+                } else {
+                    charCount.style.color = 'black';
+                }
+
+                // Optionnel : Tronquer le texte si la limite est dépassée
+                if (remaining < 0) {
+                    textarea.value = textarea.value.substring(0, maxLength);
+                    charCount.textContent = 0;
+                }
+            });
+        });
+    </script>
 {% endblock %}
