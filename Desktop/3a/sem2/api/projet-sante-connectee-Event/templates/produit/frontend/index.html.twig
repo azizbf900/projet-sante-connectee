@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Catégories{% endblock %}
+
+{% block body %}
+    <section class="categorie-container">
+        <h1 class="categorie-title">Nos Catégories</h1>
+
+        <div class="categorie-list">
+            {% for categorie in categories %}
+                <div class="categorie-card">
+                    <a href="{{ path('frontend_categorie', { id: categorie.id }) }}" class="categorie-link">
+                        <div class="categorie-image">
+                            <img src="{{ asset(categorie.imagePath) }}" alt="{{ categorie.name }}">
+                        </div>
+                        <div class="categorie-info">
+                            <h3>{{ categorie.name }}</h3>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+<style>
+/* Styles généraux pour la page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.categorie-container {
+    padding: 3rem 5%;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.categorie-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.categorie-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.categorie-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.categorie-card:nth-child(even) {
+    animation-delay: 0.2s;
+}
+
+.categorie-card:nth-child(odd) {
+    animation-delay: 0.4s;
+}
+
+.categorie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.categorie-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.categorie-image {
+    position: relative;
+    height: 200px;
+    background-color: #e9ecef;
+    overflow: hidden;
+}
+
+.categorie-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.categorie-card:hover .categorie-image img {
+    transform: scale(1.1);
+}
+
+.categorie-info {
+    padding: 1rem;
+    text-align: left;
+}
+
+.categorie-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0.5rem 0;
+    font-weight: 500;
+}
+
+.categorie-info p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+}
+
+/* Animation de fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    .categorie-title {
+        font-size: 2rem;
+    }
+    .categorie-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .categorie-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% endblock %}

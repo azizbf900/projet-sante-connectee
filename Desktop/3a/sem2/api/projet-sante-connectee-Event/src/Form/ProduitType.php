@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -82,6 +83,11 @@ class ProduitType extends AbstractType
                     'message' => 'Veuillez sélectionner une catégorie.',
                 ]),
             ]
+        ])
+        ->add('imagePath', FileType::class, [
+            'label' => 'Image',
+            'mapped' => false,  // Ne pas mapper ce champ directement à l'entité
+            'required' => false,
         ])
         ->add('save', SubmitType::class, [
             'label' => 'Ajouter le produit',

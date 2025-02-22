@@ -30,6 +30,9 @@ class Produit
     #[ORM\JoinColumn(name: "categorie_id", referencedColumnName: "id")]
     private $categorie;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imagePath = null;  // Champ imagePath ajouté (anciennement 'image')
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +91,19 @@ class Produit
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+        return $this;
+    }
+
+    // Getter pour récupérer le chemin de l'image
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    // Setter pour définir le chemin de l'image
+    public function setImagePath(?string $imagePath): self
+    {
+        $this->imagePath = $imagePath;
         return $this;
     }
 
