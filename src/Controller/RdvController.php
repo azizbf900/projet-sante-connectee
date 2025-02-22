@@ -6,6 +6,7 @@ use App\Entity\Rdv;
 use App\Form\RdvType;
 use App\Repository\RdvRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,6 +64,28 @@ public function index(RdvRepository $rdvRepository, PaginatorInterface $paginato
             'form' => $form->createView(),
         ]);
     }
+
+
+    
+
+    #[Route('/rdv/statistiques', name: 'app_rdv_statistiques', methods: ['GET'])]
+
+    public function statistiques(RdvRepository $rdvRepository): JsonResponse
+    {
+        $total = $rdvRepository->count([]);
+        $enLigne = $rdvRepository->count(['statut' => 'en_ligne']);
+        $presentiel = $rdvRepository->count(['statut' => 'presentiel']);
+
+        $enLignePourcentage = $total > 0 ? ($enLigne / $total) * 100 : 0;
+        $presentielPourcentage = $total > 0 ? ($presentiel / $total) * 100 : 0;
+
+        return $this->json([
+            'en_ligne' => round($enLignePourcentage, 2),
+            'presentiel' => round($presentielPourcentage, 2),
+            'total' => $total
+        ]);
+    }
+
     
 
 
@@ -73,6 +96,16 @@ public function index(RdvRepository $rdvRepository, PaginatorInterface $paginato
                 'rdv' => $rdv,
             ]);
         }
+     
+        #[Route('show/{id}', name: 'app_rdv_show1', methods: ['GET'])]
+        public function show1(Rdv $rdv): Response
+        {
+            return $this->render('rdv/show/show1.html.twig', [
+                'rdv' => $rdv,
+            ]);
+        }
+        
+        
 
     #[Route('/{id}/edit', name: 'app_rdv_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Rdv $rdv, EntityManagerInterface $entityManager): Response

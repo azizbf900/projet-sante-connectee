@@ -10,17 +10,17 @@
     </tr>
     <tr>
         <td>{{ form_label(form.allergies, "Allergies") }}</td>
-        <td>{{ form_widget(form.allergies) }}</td>
+        <td>{{ form_widget(form.allergies, {'attr': {'class': 'form-control'}}) }}</td>
         <td>{{ form_errors(form.allergies) }}</td>
     </tr>
     <tr>
         <td>{{ form_label(form.traitementsEnCours, "Traitements en cours") }}</td>
-        <td>{{ form_widget(form.traitementsEnCours) }}</td>
+        <td>{{ form_widget(form.traitementsEnCours, {'attr': {'class': 'form-control'}}) }}</td>
         <td>{{ form_errors(form.traitementsEnCours) }}</td>
     </tr>
     <tr>
         <td>{{ form_label(form.groupeSanguin, "Groupe sanguin") }}</td>
-        <td>{{ form_widget(form.groupeSanguin) }}</td>
+        <td>{{ form_widget(form.groupeSanguin, {'attr': {'class': 'form-control'}}) }}</td>
         <td>{{ form_errors(form.groupeSanguin) }}</td>
     </tr>
     <tr>
@@ -47,5 +47,9 @@
 
 <button type="submit" class="btn btn-primary">Save</button>
 
-
 {{ form_end(form) }}
+
+{# Exemple pour les choix dans ton FormType Symfony #}
+{# Allergies : ['Pollen', 'Poils de chat', 'Acariens', 'Lait', 'Gluten', 'Fruits à coque', 'Œufs', 'Poisson', 'Fruits de mer', 'Médicaments'] #}
+{# Traitements en cours : ['Antibiotiques', 'Antidépresseurs', 'Antihistaminiques', 'Antihypertenseurs', 'Antidiabétiques', 'Anti-inflammatoires', 'Anticoagulants', 'Insuline', 'Contraceptifs', 'Analgésiques'] #}
+{# Groupe sanguin : ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Inconnu', 'Autre'] #}

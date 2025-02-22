@@ -6,6 +6,7 @@ use App\Entity\DossierMedical;
 use App\Form\DossierMedicalType;
 use App\Repository\DossierMedicalRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ final class DossierMedicalController extends AbstractController
         $dossierMedicals = $paginator->paginate(
             $query, // Requête des dossiers médicaux
             $request->query->getInt('page', 1), // Numéro de la page (défaut : 1)
-            5 // Nombre d'éléments par page
+            3 // Nombre d'éléments par page
         );
     
         return $this->render('dossier_medical/index.html.twig', [
@@ -54,6 +55,48 @@ final class DossierMedicalController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+    #[Route('/dossier/medical/dossier_medical/statistiques', name: 'app_dossier_statistiques', methods: ['GET'])]
+      public function statistiquesAllergies(DossierMedicalRepository $dossierRepository): JsonResponse
+{
+    // Liste des allergies possibles
+    $allergiesPossibles = [
+        'Pollen', 'Poils de chat', 'Acariens', 'Lait', 'Gluten',
+        'Fruits à coque', 'Œufs', 'Poisson', 'Fruits de mer', 'Médicaments'
+    ];
+
+    // Initialiser le compteur de chaque allergie à 0
+    $allergiesCount = array_fill_keys($allergiesPossibles, 0);
+
+    // Récupérer tous les dossiers médicaux
+    $dossiers = $dossierRepository->findAll();
+    $total = count($dossiers);
+
+    // Compter les occurrences de chaque allergie
+    foreach ($dossiers as $dossier) {
+        $allergie = $dossier->getAllergies();
+        if ($allergie && isset($allergiesCount[$allergie])) {
+            $allergiesCount[$allergie]++;
+        }
+    }
+
+    // Calculer le pourcentage de chaque allergie
+    $allergiesPourcentage = [];
+    foreach ($allergiesCount as $allergie => $count) {
+        $allergiesPourcentage[$allergie] = $total > 0 ? round(($count / $total) * 100, 2) : 0;
+    }
+
+    // Retourner les résultats en JSON
+    return $this->json([
+        'total' => $total,
+        'allergies_count' => $allergiesCount,
+        'allergies_pourcentage' => $allergiesPourcentage
+    ]);
+}
+
+    
+    
 
     #[Route('/{id}', name: 'app_dossier_medical_show', methods: ['GET'])]
     public function show(DossierMedical $dossierMedical): Response
@@ -84,11 +127,12 @@ final class DossierMedicalController extends AbstractController
     #[Route('/{id}', name: 'app_dossier_medical_delete', methods: ['POST'])]
     public function delete(Request $request, DossierMedical $dossierMedical, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$dossierMedical->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $dossierMedical->getId(), $request->request->get('_token'))) {
             $entityManager->remove($dossierMedical);
             $entityManager->flush();
         }
-
+    
         return $this->redirectToRoute('app_dossier_medical_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

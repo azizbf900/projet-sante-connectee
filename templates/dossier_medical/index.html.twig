@@ -16,6 +16,13 @@
             color: #333;
         }
 
+        
+
+        .filter-select, #filter-date {
+            cursor: pointer;
+        }
+
+
         .table-container {
             display: flex;
             justify-content: center;
@@ -96,12 +103,92 @@
         .pagination a:hover {
             text-decoration: underline;
         }
+
+        .export-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .export-buttons button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        #exportPdf { background-color: red; }
+        #exportCsv { background-color: green; }
+        #exportImg { background-color: blue; }
+    
+
     </style>
+    <style>
+    .search-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    <h1>Liste des Dossiers Médicaux</h1>
+        .search-input {
+            width: 50%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    <div class="table-container">
-        <table class="table">
+        .search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }</style>
+
+    <h1>Dossiers Médicaux</h1>
+
+    <div class="export-buttons">
+        <button id="exportPdf">📄 Exporter en PDF</button>
+        <button id="exportCsv">📜 Exporter en CSV</button>
+        <button id="exportImg">🖼 Exporter en Image</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+    <div class="search-container">
+        <input type="text" class="search-input" id="search" placeholder="Rechercher un dossier médical...">
+        <select id="filter-status" class="filter-select">
+            <option value="en_ligne">en_ligne</option>
+            <option value="presentiel">presentiel</option>
+        </select>
+        <input type="date" id="filter-date" class="filter-select">
+    </div>
+
+
+ <div style="text-align: center; margin-bottom: 20px;">
+    <button id="btnStats" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        📊 Voir les Statistiques
+    </button>
+    </div>
+<div id="statsModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+     background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); text-align: center;">
+    <h2>Statistiques des Rendez-vous</h2>
+    <p id="statsContent"></p>
+    <button onclick="closeModal()" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Fermer
+    </button>
+</div>
+
+
+        <div class="table-container">
+        <table class="table" id="dossierTable">
             <thead>
                 <tr>
                     <th>Patient</th>
@@ -127,8 +214,22 @@
                     <td>{{ dossier.taille }}</td>
                     <td>{{ dossier.createdAt ? dossier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                     <td class="actions">
-                        <a href="{{ path('app_dossier_medical_show', {'id': dossier.id}) }}">Voir</a> |
-                        <a href="{{ path('app_dossier_medical_edit', {'id': dossier.id}) }}">Modifier</a>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <a href="{{ path('app_dossier_medical_show', {'id': dossier.id}) }}">
+                               <img src="{{ asset('img/view.png') }}" alt="Voir" width="24" height="24">
+                            </a>
+            
+                            <a href="{{ path('app_dossier_medical_edit', {'id': dossier.id}) }}">
+                               <img src="{{ asset('img/edit.png') }}" alt="Modifier" width="24" height="24">
+                            </a>
+
+                            <form method="post" action="{{ path('app_dossier_medical_delete', {'id': dossier.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce dossier ?');" style="display:inline;">
+                               <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dossier.id) }}">
+                               <button type="submit" style="border: none; background: none; cursor: pointer; padding: 0;">
+                                  <img src="{{ asset('img/delete.png') }}" alt="Supprimer" width="24" height="24">
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}
@@ -139,8 +240,119 @@
             </tbody>
         </table>
     </div>
-
-       <div class="pagination">
+    <div class="pagination">
         {{ knp_pagination_render(dossier_medicals) }}
     </div>
+
+    <script>
+        document.getElementById('search').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#dossierTable tbody tr'); // Correction ici
+            
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+
+       document.getElementById('filter-status').addEventListener('change', function() {
+            let statusFilter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#rdvTable tbody tr');
+            rows.forEach(row => {
+                let status = row.querySelector('.rdv-statut').textContent.toLowerCase();
+                row.style.display = (statusFilter === '' || status === statusFilter) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('filter-date').addEventListener('change', function() {
+            let dateFilter = this.value;
+            let rows = document.querySelectorAll('#rdvTable tbody tr');
+            rows.forEach(row => {
+                let date = row.querySelector('.rdv-date').textContent;
+                row.style.display = (dateFilter === '' || date === dateFilter) ? '' : 'none';
+            });
+        });
+
+      
+
+function closeModal() {
+    document.getElementById('statsModal').style.display = 'none';
+}
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("exportPdf").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        
+        doc.text("Liste des Rendez-vous", 10, 10);
+        
+        let rows = [];
+        document.querySelectorAll("#rdvTable tbody tr").forEach(row => {
+            let rowData = [];
+            row.querySelectorAll("td").forEach(cell => {
+                rowData.push(cell.innerText);
+            });
+            rows.push(rowData);
+        });
+        
+        doc.autoTable({ head: [["DateHeure", "Statut", "Actions"]], body: rows });
+        doc.save("rendez-vous.pdf");
+    });
+    
+    document.getElementById("exportCsv").addEventListener("click", function () {
+        let csvContent = "DateHeure,Statut\n";
+        document.querySelectorAll("#rdvTable tbody tr").forEach(row => {
+            let rowData = [];
+            row.querySelectorAll("td:not(:last-child)").forEach(cell => {
+                rowData.push(cell.innerText);
+            });
+            csvContent += rowData.join(",") + "\n";
+        });
+        
+        let blob = new Blob([csvContent], { type: "text/csv" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "rendez-vous.csv";
+        link.click();
+    });
+    
+    document.getElementById("exportImg").addEventListener("click", function () {
+        html2canvas(document.getElementById("rdvTable")).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "rendez-vous.png";
+            link.click();
+        });
+    });
+});
+
+
+    </script>
+    <script>
+    document.getElementById('btn-statistiques').addEventListener('click', function () {
+    fetch('/dossier_medical/statistiques')
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur serveur');
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('resultat').innerHTML = `
+                <p>Total dossiers : ${data.total}</p>
+                <h3>Allergies (compte) :</h3>
+                <ul>${Object.entries(data.allergies_count).map(([k, v]) => `<li>${k}: ${v}</li>`).join('')}</ul>
+                <h3>Allergies (pourcentage) :</h3>
+                <ul>${Object.entries(data.allergies_pourcentage).map(([k, v]) => `<li>${k}: ${v}%</li>`).join('')}</ul>
+            `;
+        })
+        .catch(error => {
+            document.getElementById('resultat').innerHTML = `<p style="color:red">${error.message}</p>`;
+            console.error(error);
+        });
+});
+
+</script>
+
+
 {% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des Rendez-vous{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background: url("{{ asset('img/stats-bg.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            display: inline-block;
+            width: 45%;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stat-enligne {
+            background-color: #28a745;
+        }
+
+        .stat-presentiel {
+            background-color: #007bff;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+
+        .btn-back {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #555;
+        }
+    </style>
+
+    <div class="container">
+        <h1>📊 Statistiques des Rendez-vous</h1>
+
+        <div class="stat-card stat-enligne">
+            Rendez-vous en ligne: {{ en_ligne }}%
+        </div>
+
+        <div class="stat-card stat-presentiel">
+            Rendez-vous en présentiel: {{ presentiel }}%
+        </div>
+
+        <div class="chart-container">
+            <canvas id="rdvChart"></canvas>
+        </div>
+
+        <a href="{{ path('app_rdv_index') }}" class="btn-back">← Retour</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('rdvChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['En ligne', 'Présentiel'],
+                    datasets: [{
+                        data: [{{ en_ligne }}, {{ presentiel }}],
+                        backgroundColor: ['#28a745', '#007bff']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+    </script>
+{% endblock %}

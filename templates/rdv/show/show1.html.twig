@@ -104,11 +104,18 @@
                 <th>Statut</th>
                 <td>{{ rdv.statut }}</td>
             </tr>
+            <tr>
+                <th>Patient</th>
+                <td>{{ rdv.Patient.nom }}</td>
+            </tr>
+            <tr>
+                <th>Patient</th>
+                <td>{{ rdv.medecin.nom }}</td>
+            </tr>
         </tbody>
     </table>
 
     <div class="btn-container">
-        <a href="{{ path('app_rdv_index') }}" class="btn btn-secondary">Retour à la liste</a>
         <a href="{{ path('app_rdv_edit', {'id': rdv.id}) }}" class="btn btn-primary">Modifier</a>
         {{ include('rdv/_delete_form.html.twig', { 'class': 'btn btn-danger' }) }}
     </div>

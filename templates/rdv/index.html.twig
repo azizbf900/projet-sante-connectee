@@ -16,6 +16,31 @@
             color: #333;
         }
 
+        .search-filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input, .filter-select, #filter-date {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-input {
+            width: 300px;
+        }
+
+        .filter-select, #filter-date {
+            cursor: pointer;
+        }
+
         .table-container {
             display: flex;
             justify-content: center;
@@ -39,42 +64,8 @@
             background-color: #007bff;
             color: white;
         }
-
-        .table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .table tr:hover {
-            background-color: #ddd;
-        }
-
-        .actions a {
-            text-decoration: none;
-            color: #007bff;
-            margin: 0 5px;
-        }
-
-        .actions a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-create-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .btn-create {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .btn-create:hover {
-            background-color: #218838;
-        }
+    </style>
+        <style>
 
         .pagination {
             margin-top: 20px;
@@ -96,12 +87,68 @@
         .pagination a:hover {
             text-decoration: underline;
         }
-    </style>
 
-    <h1>Rdv Index</h1>
+
+         .export-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .export-buttons button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        #exportPdf { background-color: red; }
+        #exportCsv { background-color: green; }
+        #exportImg { background-color: blue; }
+    
+</style>
+
+
+    <h1>Rendez-vous</h1>
+
+
+     <div class="export-buttons">
+        <button id="exportPdf">📄 Exporter en PDF</button>
+        <button id="exportCsv">📜 Exporter en CSV</button>
+        <button id="exportImg">🖼 Exporter en Image</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+    <div class="search-filter-container">
+        <input type="text" class="search-input" id="search" placeholder="Rechercher un rendez-vous...">
+        <select id="filter-status" class="filter-select">
+            <option value="en_ligne">en_ligne</option>
+            <option value="presentiel">presentiel</option>
+        </select>
+        <input type="date" id="filter-date" class="filter-select">
+    </div>
+    <div style="text-align: center; margin-bottom: 20px;">
+    <button id="btnStats" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        📊 Voir les Statistiques
+    </button>
+    </div>
+<div id="statsModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+     background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); text-align: center;">
+    <h2>Statistiques des Rendez-vous</h2>
+    <p id="statsContent"></p>
+    <button onclick="closeModal()" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Fermer
+    </button>
+</div>
+
 
     <div class="table-container">
-        <table class="table">
+        <table class="table" id="rdvTable">
             <thead>
                 <tr>
                     <th>DateHeure</th>
@@ -112,25 +159,150 @@
             <tbody>
             {% for rdv in rdvs %}
                 <tr>
-                    <td>{{ rdv.dateHeure ? rdv.dateHeure|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ rdv.statut }}</td>
+                    <td class="rdv-date">{{ rdv.dateHeure ? rdv.dateHeure|date('Y-m-d') : '' }}</td>
+                    <td class="rdv-statut">
+                      {% if rdv.statut == 'en_ligne' %}
+                            <span style="color: green; font-size: 20px;">●</span>
+                      {% elseif rdv.statut == 'presentiel' %}
+                            <span style="color: blue; font-size: 20px;">●</span>
+                      {% endif %}
+                    {{ rdv.statut }}
+                    </td>
+
                     <td class="actions">
-                        <a href="{{ path('app_rdv_show', {'id': rdv.id}) }}">Afficher</a> |
-                        <a href="{{ path('app_rdv_edit', {'id': rdv.id}) }}">Modifier</a>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <a href="{{ path('app_rdv_show', {'id': rdv.id}) }}">
+                                <img src="{{ asset('img/view.png') }}" alt="Voir" width="24" height="24">
+                            </a>
+                            <a href="{{ path('app_rdv_edit', {'id': rdv.id}) }}">
+                                <img src="{{ asset('img/edit.png') }}" alt="Modifier" width="24" height="24">
+                            </a>
+                            <form method="post" action="{{ path('app_rdv_delete', {'id': rdv.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce dossier ?');" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rdv.id) }}">
+                                <button type="submit" style="border: none; background: none; cursor: pointer; padding: 0;">
+                                    <img src="{{ asset('img/delete.png') }}" alt="Supprimer" width="24" height="24">
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="4">Aucun rendez-vous trouvé</td>
+                    <td colspan="3">Aucun rendez-vous trouvé</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-
-    
-
     <div class="pagination">
         {{ knp_pagination_render(rdvs) }}
     </div>
+
+    <script>
+        document.getElementById('search').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#rdvTable tbody tr');
+            
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('filter-status').addEventListener('change', function() {
+            let statusFilter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#rdvTable tbody tr');
+            rows.forEach(row => {
+                let status = row.querySelector('.rdv-statut').textContent.toLowerCase();
+                row.style.display = (statusFilter === '' || status === statusFilter) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('filter-date').addEventListener('change', function() {
+            let dateFilter = this.value;
+            let rows = document.querySelectorAll('#rdvTable tbody tr');
+            rows.forEach(row => {
+                let date = row.querySelector('.rdv-date').textContent;
+                row.style.display = (dateFilter === '' || date === dateFilter) ? '' : 'none';
+            });
+        });
+
+       document.getElementById('btnStats').addEventListener('click', function() {
+    console.log("Bouton cliqué, envoi de la requête...");
+
+    fetch("{{ path('app_rdv_statistiques') }}")
+        .then(response => {
+            console.log("Réponse reçue :", response);
+            return response.json();
+        })
+        .then(data => {
+            console.log("Données reçues :", data);
+            let content = data.total === 0
+                ? "Aucun rendez-vous disponible."
+                : `📡 En ligne : ${data.en_ligne}%<br>🏢 Présentiel : ${data.presentiel}%`;
+
+            document.getElementById('statsContent').innerHTML = content;
+            document.getElementById('statsModal').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des statistiques:', error);
+            document.getElementById('statsContent').innerHTML = "Erreur de chargement.";
+        });
+});
+
+
+function closeModal() {
+    document.getElementById('statsModal').style.display = 'none';
+}
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("exportPdf").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        
+        doc.text("Liste des Rendez-vous", 10, 10);
+        
+        let rows = [];
+        document.querySelectorAll("#rdvTable tbody tr").forEach(row => {
+            let rowData = [];
+            row.querySelectorAll("td").forEach(cell => {
+                rowData.push(cell.innerText);
+            });
+            rows.push(rowData);
+        });
+        
+        doc.autoTable({ head: [["DateHeure", "Statut", "Actions"]], body: rows });
+        doc.save("rendez-vous.pdf");
+    });
+    
+    document.getElementById("exportCsv").addEventListener("click", function () {
+        let csvContent = "DateHeure,Statut\n";
+        document.querySelectorAll("#rdvTable tbody tr").forEach(row => {
+            let rowData = [];
+            row.querySelectorAll("td:not(:last-child)").forEach(cell => {
+                rowData.push(cell.innerText);
+            });
+            csvContent += rowData.join(",") + "\n";
+        });
+        
+        let blob = new Blob([csvContent], { type: "text/csv" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "rendez-vous.csv";
+        link.click();
+    });
+    
+    document.getElementById("exportImg").addEventListener("click", function () {
+        html2canvas(document.getElementById("rdvTable")).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "rendez-vous.png";
+            link.click();
+        });
+    });
+});
+
+    </script>
 {% endblock %}
