@@ -1,17 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nos Catégories{% endblock %}
+{% block title %}Nos Catégories Santé{% endblock %}
 
 {% block body %}
     <section class="categorie-container">
-        <h1 class="categorie-title">Nos Catégories</h1>
+        <h1 class="categorie-title">Nos Catégories de Médicaments</h1>
 
+        <!-- Formulaire de filtrage avec design professionnel -->
+        <form method="get" action="{{ path('frontend_index') }}" class="filter-form">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    name="categorie_search" 
+                    id="categorie_search" 
+                    placeholder="Tapez pour filtrer..." 
+                    value="{{ app.request.query.get('categorie_search') }}"
+                    class="form-control"
+                    onkeyup="checkCategorieExistence()"
+                />
+                <div id="categorie_error_message" class="error-message">Cette catégorie n'existe pas</div>
+                <button type="submit" class="filter-button">Filtrer</button>
+            </div>
+        </form>
+
+        <!-- Liste des catégories avec carte -->
         <div class="categorie-list">
-            {% for categorie in categories %}
+            {% for categorie in filtered_categories %}
                 <div class="categorie-card">
                     <a href="{{ path('frontend_categorie', { id: categorie.id }) }}" class="categorie-link">
                         <div class="categorie-image">
-                            <img src="{{ asset(categorie.imagePath) }}" alt="{{ categorie.name }}">
+                            <img src="{{ asset(categorie.image_path) }}" alt="{{ categorie.name }}">
                         </div>
                         <div class="categorie-info">
                             <h3>{{ categorie.name }}</h3>
@@ -21,136 +39,196 @@
             {% endfor %}
         </div>
     </section>
-    
-<style>
-/* Styles généraux pour la page */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
 
-.categorie-container {
-    padding: 3rem 5%;
-    text-align: center;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-    margin-top: 20px;
-    transition: all 0.3s ease;
-}
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 
-.categorie-title {
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+        /* Section de catégories */
+        .categorie-container {
+            padding: 2rem 5%;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
 
-.categorie-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-}
+        .categorie-title {
+            font-size: 2.8rem;
+            color: #007bff;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-transform: uppercase;
+        }
 
-.categorie-card {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
-}
+        /* Formulaire de filtrage */
+        .filter-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
 
-.categorie-card:nth-child(even) {
-    animation-delay: 0.2s;
-}
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
 
-.categorie-card:nth-child(odd) {
-    animation-delay: 0.4s;
-}
+        .form-control {
+            padding: 12px;
+            width: 250px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
 
-.categorie-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
+        .filter-button {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
 
-.categorie-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
-}
+        .filter-button:hover {
+            background-color: #218838;
+        }
 
-.categorie-image {
-    position: relative;
-    height: 200px;
-    background-color: #e9ecef;
-    overflow: hidden;
-}
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            display: none;
+            margin-left: 10px;
+        }
 
-.categorie-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
+        /* Liste des catégories */
+        .categorie-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
 
-.categorie-card:hover .categorie-image img {
-    transform: scale(1.1);
-}
+        .categorie-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.6s forwards;
+        }
 
-.categorie-info {
-    padding: 1rem;
-    text-align: left;
-}
+        .categorie-card:nth-child(even) {
+            animation-delay: 0.3s;
+        }
 
-.categorie-info h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0.5rem 0;
-    font-weight: 500;
-}
+        .categorie-card:nth-child(odd) {
+            animation-delay: 0.6s;
+        }
 
-.categorie-info p {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.4;
-    margin-bottom: 1rem;
-}
+        .categorie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
 
-/* Animation de fadeIn */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .categorie-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+        }
 
-/* Responsivité */
-@media (max-width: 768px) {
-    .categorie-title {
-        font-size: 2rem;
-    }
-    .categorie-list {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+        .categorie-image {
+            position: relative;
+            height: 200px;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
 
-@media (max-width: 480px) {
-    .categorie-list {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
+        .categorie-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
 
+        .categorie-card:hover .categorie-image img {
+            transform: scale(1.1);
+        }
+
+        .categorie-info {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .categorie-info h3 {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        /* Animation fadeIn */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .categorie-title {
+                font-size: 2.5rem;
+            }
+
+            .filter-form {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .categorie-list {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-button {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        function checkCategorieExistence() {
+            var input = document.getElementById('categorie_search').value;
+            var errorMessage = document.getElementById('categorie_error_message');
+            
+            var existingCategories = {{ categories|json_encode()|raw }};
+            var categoryExists = existingCategories.some(function(categorie) {
+                return categorie.name.toLowerCase() === input.toLowerCase();
+            });
+            
+            if (!categoryExists && input.length > 0) {
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        }
+    </script>
 {% endblock %}

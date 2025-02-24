@@ -71,10 +71,7 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}    <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+    
 
     <!-- header-start -->
     <header>
@@ -120,7 +117,7 @@
                             <div class="main-menu  d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a class="active" href="index.html">home</a></li>
+                                        <li><a class="active" href="{{ path('app_main') }}">home</a></li>
                                         <li><a href="Department.html">Department</a></li>
                                         <li><a href="#">blog <i class="ti-angle-down"></i></a>
                                             <ul class="submenu">
@@ -128,7 +125,7 @@
                                                 <li><a href="single-blog.html">single-blog</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="produit">Produits <i class="ti-angle-down"></i></a>
+                                        <a href="{{ path('frontend_index') }}">Produits</a>
                                         <li><a href="#">pages <i class="ti-angle-down"></i></a>
                                             <ul class="submenu">
                                                 <li><a href="elements.html">elements</a></li>
@@ -158,6 +155,10 @@
         </div>
     </header>
     <!-- header-end -->
+    <body>
+        {% block body %}    <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
 
     <!-- slider_area_start -->
     <div class="slider_area">
@@ -167,10 +168,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="slider_text ">
-                                <h3> <span>Health care</span> <br>
-                                    For Hole Family </h3>
-                                <p>In healthcare sector, service excellence is the facility of <br> the hospital as
-                                    healthcare service provider to consistently.</p>
+                                <h3> <span>Santé Connectée</span> 
+                                <br> Pour Toute la Famille </h3>  
+                                <p>Avec **SanaConnect**, la santé devient plus intelligente et personnalisée.<br>
+                                Notre plateforme garantit une gestion sécurisée et optimisée des soins grâce à l’IA.</p>
                                 <a href="#" class="boxed-btn3">Check Our Services</a>
                             </div>
                         </div>
@@ -619,7 +620,9 @@
     </div>
     <!-- Emergency_contact end -->
 
-<!-- footer start -->
+    {% endblock %}
+    </body>
+    <!-- footer start -->
     <footer class="footer">
             <div class="footer_top">
                 <div class="container">
@@ -765,6 +768,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </form>
-    {% endblock %}
-    </body>
 </html>

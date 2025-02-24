@@ -18,7 +18,7 @@ use App\Repository\CategorieRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[Route('/produit', name: 'produit_')]
+#[Route('/admin/produit', name: 'produit_')]
 class ProduitController extends AbstractController
 {
     private $entityManager;

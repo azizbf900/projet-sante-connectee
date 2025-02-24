@@ -21,7 +21,7 @@ class Categorie
     private ?string $name = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $imagePath = null;  // Champ imagePath ajouté (anciennement 'image')
+    private ?string $image_path = null;  // Champ imagePath ajouté (anciennement 'image')
 
     // Cette relation définit que la catégorie possède plusieurs produits
     #[ORM\OneToMany(mappedBy: "categorie", targetEntity: Produit::class)]
@@ -56,15 +56,15 @@ class Categorie
     }
 
     // Getter pour récupérer le chemin de l'image
-    public function getImagePath(): ?string
+    public function getimage_path(): ?string
     {
-        return $this->imagePath;
+        return $this->image_path;
     }
 
     // Setter pour définir le chemin de l'image
-    public function setImagePath(?string $imagePath): self
+    public function setimage_path(?string $imagePath): self
     {
-        $this->imagePath = $imagePath;
+        $this->image_path = $imagePath;
         return $this;
     }
 }

@@ -11,9 +11,9 @@
 
         <div class="product-details">
             <div class="product-image">
-                <img src="{{ asset(produit.imagePath) }}" alt="{{ produit.nom }}" />
+                <img src="{{ asset(produit.image_path) }}" alt="{{ produit.nom }}">
             </div>
-            
+
             <div class="product-description">
                 <p>{{ produit.description }}</p>
             </div>
@@ -25,141 +25,252 @@
         </div>
     </section>
 
-<style>
-/* Styles généraux pour la page */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-}
+    <section class="product-benefits">
+        <h2>Les bénéfices pour la santé</h2>
+        <div class="benefits-cards">
+            <div class="card">
+                <img src="{{ asset('images/benefit1.png') }}" alt="Bénéfice 1">
+                <h3>Avantage 1</h3>
+                <p>Description des avantages pour la santé du produit.</p>
+            </div>
+            <div class="card">
+                <img src="{{ asset('images/benefit2.png') }}" alt="Bénéfice 2">
+                <h3>Avantage 2</h3>
+                <p>Description des avantages pour la santé du produit.</p>
+            </div>
+            <div class="card">
+                <img src="{{ asset('images/benefit3.png') }}" alt="Bénéfice 3">
+                <h3>Avantage 3</h3>
+                <p>Description des avantages pour la santé du produit.</p>
+            </div>
+        </div>
+    </section>
 
-.product-container {
-    width: 80%;
-    margin: 40px auto;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    padding: 2rem;
-    transition: transform 0.3s ease-in-out;
-}
+    <section class="customer-reviews">
+        <h2>Avis des clients</h2>
+        <div class="reviews-carousel">
+            <div class="review-card">
+                <p>"Ce produit a changé ma vie! Il est fantastique pour ma santé."</p>
+                <span>- Client 1</span>
+            </div>
+            <div class="review-card">
+                <p>"Un excellent produit que je recommande vivement."</p>
+                <span>- Client 2</span>
+            </div>
+            <div class="review-card">
+                <p>"Un must-have pour toute personne soucieuse de sa santé."</p>
+                <span>- Client 3</span>
+            </div>
+        </div>
+    </section>
 
-.product-container:hover {
-    transform: translateY(-10px);
-}
+    <style>
+        /* Style global */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f8fb;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: #333;
+        }
 
-.product-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
+        /* Conteneur produit */
+        .product-container {
+            width: 85%;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            padding: 3rem;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+            background-color: #fff;
+        }
 
-.product-header h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    text-transform: uppercase;
-}
+        .product-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c6ed5;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
 
-.product-price {
-    font-size: 1.5rem;
-    color: #e94e77;
-    margin-top: 10px;
-    font-weight: bold;
-}
+        .product-price {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: 600;
+        }
 
-.product-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    animation: fadeIn 1s ease-in-out;
-}
+        .product-details {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+            animation: fadeIn 1.5s ease-in-out;
+        }
 
-.product-image {
-    flex: 1;
-    max-width: 500px;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
+        .product-image {
+            flex: 1;
+            max-width: 50%;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
 
-.product-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    transition: transform 0.3s ease-in-out;
-}
+        .product-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
 
-.product-image:hover img {
-    transform: scale(1.05);
-}
+        .product-description {
+            flex: 1;
+            max-width: 50%;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+        }
 
-.product-description {
-    flex: 1;
-    max-width: 500px;
-    padding: 1rem;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #666;
-}
+        .product-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
 
-.product-actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
+        .btn-buy, .btn-add-to-cart {
+            padding: 25px 25px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
 
-.btn-buy, .btn-add-to-cart {
-    padding: 15px 30px;
-    background-color: #e94e77;
-    color: white;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
+        .btn-buy:hover, .btn-add-to-cart:hover {
+            background-color: #218838;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
-.btn-buy:hover, .btn-add-to-cart:hover {
-    background-color: #d13a64;
-    transform: translateY(-5px);
-}
+        /* Bénéfices section */
+        .product-benefits {
+            background-color: #eaf4f0;
+            padding: 50px 0;
+        }
 
-/* Animation de fadeIn */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .benefits-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
 
-/* Responsivité */
-@media (max-width: 768px) {
-    .product-details {
-        flex-direction: column;
-    }
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 30%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .product-image, .product-description {
-        max-width: 100%;
-    }
-}
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
 
-@media (max-width: 480px) {
-    .product-header h1 {
-        font-size: 2rem;
-    }
+        .card img {
+            max-width: 100px;
+            margin-bottom: 20px;
+        }
 
-    .product-price {
-        font-size: 1.2rem;
-    }
-}
-</style>
+        /* Avis des clients */
+        .customer-reviews {
+            padding: 50px 0;
+            background-color: #e0e0e0;
+        }
 
+        .reviews-carousel {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .review-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .review-card p {
+            font-style: italic;
+            color: #555;
+        }
+
+        .review-card span {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsivité */
+        @media (max-width: 768px) {
+            .product-details {
+                flex-direction: column;
+            }
+
+            .product-image, .product-description {
+                max-width: 100%;
+            }
+
+            .card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .reviews-carousel {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 {% endblock %}

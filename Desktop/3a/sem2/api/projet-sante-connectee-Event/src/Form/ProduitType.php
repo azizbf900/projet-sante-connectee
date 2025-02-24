@@ -84,7 +84,7 @@ class ProduitType extends AbstractType
                 ]),
             ]
         ])
-        ->add('imagePath', FileType::class, [
+        ->add('image_path', FileType::class, [
             'label' => 'Image',
             'mapped' => false,  // Ne pas mapper ce champ directement à l'entité
             'required' => false,
