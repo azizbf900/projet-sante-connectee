@@ -1,66 +1,168 @@
-/* --- Styles généraux --- */
+/* 🌟 Styles généraux */
 body {
-    background-color: #f8f9fa;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
 }
 
-/* --- Style des cartes (posts) --- */
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: none;
+/* 🌙 Mode sombre */
+.dark-mode {
+    background-color: #181818;
+    color: #f1f1f1;
+}
+
+/* 🌟 Conteneur principal */
+.post-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 📌 Carte de post */
+.post-card {
+    background: white;
     border-radius: 12px;
-    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card:hover {
+.post-card:hover {
     transform: translateY(-5px);
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* --- Image des posts --- */
-.card-img-top {
-    max-height: 450px;
-    object-fit: cover;
-    border-bottom: 4px solid #007bff;
-}
-
-/* --- Titre du post --- */
-.card-title {
-    font-size: 22px;
-    color: #007bff;
+/* 📌 Titre du post */
+.post-title {
+    font-size: 1.4em;
     font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
 }
 
-/* --- Légende du post --- */
-.card-text {
-    font-size: 16px;
+.dark-mode .post-title {
+    color: #f1f1f1;
+}
+
+/* 📌 Métadonnées du post */
+.post-meta {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.dark-mode .post-meta {
+    color: #bbb;
+}
+
+/* 📌 Contenu du post */
+.post-content {
+    font-size: 1em;
     color: #555;
 }
 
-/* --- Boutons --- */
-.btn-outline-warning, .btn-outline-danger {
-    border-radius: 20px;
-    font-size: 14px;
-    padding: 8px 20px;
+.dark-mode .post-content {
+    color: #ddd;
 }
 
-.btn-outline-warning:hover {
-    background-color: #ffbb33;
+/* 📌 Bouton "Lire plus" */
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.read-more:hover {
+    color: #0056b3;
+}
+
+/* 📌 Boutons d'action */
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.btn {
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* ❤️ Bouton J'aime */
+.btn-like {
+    background-color: #ff4d4d;
     color: white;
 }
 
-.btn-outline-danger:hover {
-    background-color: #dc3545;
+.btn-like:hover {
+    background-color: #e63939;
+}
+
+/* 💬 Bouton Commentaires */
+.btn-comment {
+    background-color: #4dafff;
     color: white;
 }
 
-/* --- Bouton créer un post --- */
-.btn-primary {
+.btn-comment:hover {
+    background-color: #3598db;
+}
+
+/* 🎛️ Boutons de tri */
+.sort-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.sort-btn {
     background-color: #007bff;
-    border-radius: 20px;
-    padding: 10px 20px;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn-primary:hover {
+.sort-btn:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* 🌙 Bouton Mode Sombre */
+.dark-mode-toggle {
+    display: block;
+    background-color: #333;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px auto;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #555;
 }

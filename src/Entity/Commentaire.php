@@ -6,6 +6,7 @@ use App\Repository\CommentaireRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Post;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
@@ -27,6 +28,19 @@ class Commentaire
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
+    #[ORM\Column(type: 'integer')]
+    private int $likes = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $dislikes = 0;
+
+    public function __construct()
+    {
+        $this->dateCommentaire = new \DateTime();
+        $this->likes = 0;
+        $this->dislikes = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -40,7 +54,6 @@ class Commentaire
     public function setContenu(string $contenu): static
     {
         $this->contenu = $contenu;
-
         return $this;
     }
 
@@ -52,7 +65,6 @@ class Commentaire
     public function setDateCommentaire(\DateTimeInterface $dateCommentaire): static
     {
         $this->dateCommentaire = $dateCommentaire;
-
         return $this;
     }
 
@@ -64,7 +76,40 @@ class Commentaire
     public function setPost(?Post $post): static
     {
         $this->post = $post;
+        return $this;
+    }
 
+    public function getLikes(): int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): self
+    {
+        $this->likes = $likes;
+        return $this;
+    }
+
+    public function incrementLikes(): self
+    {
+        $this->likes++;
+        return $this;
+    }
+
+    public function getDislikes(): int
+    {
+        return $this->dislikes;
+    }
+
+    public function setDislikes(int $dislikes): self
+    {
+        $this->dislikes = $dislikes;
+        return $this;
+    }
+
+    public function incrementDislikes(): self
+    {
+        $this->dislikes++;
         return $this;
     }
 }

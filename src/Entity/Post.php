@@ -36,6 +36,12 @@ class Post
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $legende = null;
 
+    #[ORM\Column(type: 'integer')]
+    private int $likes = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $dislikes = 0;
+
     /**
      * @var Collection<int, Commentaire>
      */
@@ -46,6 +52,8 @@ class Post
     {
         $this->datePublication = new \DateTime(); // Définit automatiquement la date actuelle
         $this->commentaires = new ArrayCollection();
+        $this->likes = 0;
+        $this->dislikes = 0;
     }
 
     public function getId(): ?int
@@ -127,4 +135,37 @@ class Post
         return $this;
     }
 
+    public function getLikes(): int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): self
+    {
+        $this->likes = $likes;
+        return $this;
+    }
+
+    public function incrementLikes(): self
+    {
+        $this->likes++;
+        return $this;
+    }
+
+    public function getDislikes(): int
+    {
+        return $this->dislikes;
+    }
+
+    public function setDislikes(int $dislikes): self
+    {
+        $this->dislikes = $dislikes;
+        return $this;
+    }
+
+    public function incrementDislikes(): self
+    {
+        $this->dislikes++;
+        return $this;
+    }
 }

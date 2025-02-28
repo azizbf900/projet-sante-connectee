@@ -3,7 +3,43 @@
 {% block title %} Liste des Posts {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <style>
+        /* Styles pour le bouton "Voir plus" des légendes */
+        .post-legende {
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limite à 3 lignes */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .post-legende.expanded {
+            -webkit-line-clamp: unset; /* Supprime la limite de lignes */
+        }
+
+        .btn-see-more {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .btn-see-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Styles pour l'icône de commentaire */
+        .comment-icon {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -13,10 +49,26 @@
         <a href="{{ path('post_new') }}" class="btn btn-primary shadow-sm">Créer un Post</a>
     </div>
 
+    <!-- Sélecteur de tri -->
+    <div class="d-flex justify-content-end mb-4">
+        <select id="sort-posts" class="form-select w-auto">
+            <option value="date" {% if sort == 'date' %}selected{% endif %}>Trier par Date</option>
+            <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>Trier par Popularité</option>
+        </select>
+    </div>
+
+    <script>
+        document.getElementById("sort-posts").addEventListener("change", function () {
+            let selected = this.value;
+            window.location.href = "?sort=" + selected;
+        });
+    </script>
+
     <div class="row">
         {% for post in posts %}
             <div class="col-12 mb-4">
                 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <!-- Image du post -->
                     {% if post.contenu %}
                         <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">
                     {% else %}
@@ -27,24 +79,69 @@
                     {% endif %}
 
                     <div class="card-body text-center p-4">
+                        <!-- Titre du post -->
                         <h4 class="card-title fw-bold text-primary">{{ post.titre }}</h4>
-                        {% if post.legende %}
-                            <p class="card-text text-muted fst-italic" style="font-size: 16px;">"{{ post.legende }}"</p>
-                        {% endif %}
-                        <p class="card-text text-muted" style="font-size: 14px;">🕒 {{ post.datePublication|date('d/m/Y H:i') }}</p>
 
+                        <!-- Légende du post avec "Voir plus" -->
+                        {% if post.legende %}
+                            <p class="post-legende" id="legende-{{ post.id }}">
+                                "{{ post.legende }}"
+                            </p>
+                            {% if post.legende|length > 100 %}
+                                <button class="btn-see-more" onclick="toggleLegende({{ post.id }})">
+                                    Voir plus
+                                </button>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Date de publication -->
                         <p class="card-text text-muted" style="font-size: 14px;">
-                            💬 {{ post.commentaires|length }} Commentaire(s)
+                            🕒 {{ post.datePublication|date('d/m/Y H:i') }}
                         </p>
 
+                        <!-- Nombre de commentaires avec icône -->
+                        <p class="card-text text-muted" style="font-size: 14px;">
+                            <i class="fas fa-comment comment-icon"></i> {{ post.commentaires|length }} Commentaire(s)
+                        </p>
+
+                        <!-- Boutons Like & Dislike pour le Post -->
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <button class="btn btn-outline-success like-post" data-id="{{ post.id }}">
+                                👍 <span id="likes-count-{{ post.id }}">{{ post.likes }}</span>
+                            </button>
+                            <button class="btn btn-outline-danger dislike-post" data-id="{{ post.id }}">
+                                👎 <span id="dislikes-count-{{ post.id }}">{{ post.dislikes }}</span>
+                            </button>
+                        </div>
+
+                        <!-- Bouton "Voir Post" -->
+                        <div class="d-flex justify-content-center mt-3">
+                            <a href="{{ path('post_show', {'id': post.id}) }}" class="btn btn-info btn-sm px-4 shadow-sm">
+                                <i class="fas fa-eye"></i> Voir Post
+                            </a>
+                        </div>
+
+                        <!-- Commentaires -->
                         <h3 class="mt-4">Commentaires</h3>
 
                         {% for commentaire in post.commentaires %}
                             <div class="card mt-2">
                                 <div class="card-body">
                                     <p>{{ commentaire.contenu }}</p>
-                                    <p class="text-muted" style="font-size: 12px;">Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}</p>
-                                    
+                                    <p class="text-muted" style="font-size: 12px;">
+                                        Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}
+                                    </p>
+
+                                    <!-- Boutons Like & Dislike pour le Commentaire -->
+                                    <div class="d-flex justify-content-center gap-2 mt-2">
+                                        <button class="btn btn-outline-success like-comment" data-id="{{ commentaire.id }}">
+                                            👍 <span id="likes-comment-{{ commentaire.id }}">{{ commentaire.likes }}</span>
+                                        </button>
+                                        <button class="btn btn-outline-danger dislike-comment" data-id="{{ commentaire.id }}">
+                                            👎 <span id="dislikes-comment-{{ commentaire.id }}">{{ commentaire.dislikes }}</span>
+                                        </button>
+                                    </div>
+
                                     <!-- Boutons Modifier & Supprimer du commentaire -->
                                     <div class="d-flex justify-content-end gap-2 mt-2">
                                         <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-outline-warning btn-sm px-3 shadow-sm">
@@ -64,7 +161,9 @@
                         {% endfor %}
 
                         <!-- Bouton pour ajouter un commentaire -->
-                        <a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">Ajouter un commentaire</a>
+                        <a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-comment"></i> Ajouter un commentaire
+                        </a>
 
                         <!-- Boutons Modifier & Supprimer du post -->
                         <div class="d-flex justify-content-center gap-3 mt-3">
@@ -86,4 +185,23 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Script pour gérer le "Voir plus" des légendes -->
+<script>
+    function toggleLegende(postId) {
+        const legende = document.getElementById(`legende-${postId}`);
+        const button = legende.nextElementSibling;
+
+        if (legende.classList.contains('expanded')) {
+            legende.classList.remove('expanded');
+            button.textContent = 'Voir plus';
+        } else {
+            legende.classList.add('expanded');
+            button.textContent = 'Voir moins';
+        }
+    }
+</script>
+
+<!-- Inclusion du script AJAX pour Like/Dislike -->
+<script src="{{ asset('js/like.js') }}"></script>
 {% endblock %}

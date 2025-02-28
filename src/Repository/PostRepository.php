@@ -39,5 +39,24 @@ class PostRepository extends ServiceEntityRepository
     //            ->getQuery()
     //            ->getOneOrNullResult()
     //        ;
+
+    public function findByDate(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findByPopularity(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.likes', 'l')
+            ->groupBy('p.id')
+            ->orderBy('COUNT(l.id)', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    }
 }
