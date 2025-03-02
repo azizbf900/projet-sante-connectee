@@ -34,11 +34,15 @@ class Commentaire
     #[ORM\Column(type: 'integer')]
     private int $dislikes = 0;
 
+    #[ORM\Column(type: 'integer')]
+    private int $reportCount = 0;
+
     public function __construct()
     {
         $this->dateCommentaire = new \DateTime();
         $this->likes = 0;
         $this->dislikes = 0;
+        $this->reportCount = 0;
     }
 
     public function getId(): ?int
@@ -110,6 +114,23 @@ class Commentaire
     public function incrementDislikes(): self
     {
         $this->dislikes++;
+        return $this;
+    }
+
+    public function getReportCount(): int
+    {
+        return $this->reportCount;
+    }
+
+    public function setReportCount(int $reportCount): self
+    {
+        $this->reportCount = $reportCount;
+        return $this;
+    }
+
+    public function incrementReportCount(): self
+    {
+        $this->reportCount++;
         return $this;
     }
 }

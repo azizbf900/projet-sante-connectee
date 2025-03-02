@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Commentaire;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {

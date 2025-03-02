@@ -43,165 +43,187 @@
 {% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <!-- Bouton "Créer un Post" -->
-    <div class="d-flex justify-content-end mb-4">
-        <a href="{{ path('post_new') }}" class="btn btn-primary shadow-sm">Créer un Post</a>
-    </div>
+    <!-- Affichage des messages flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    <!-- Sélecteur de tri -->
-    <div class="d-flex justify-content-end mb-4">
-        <select id="sort-posts" class="form-select w-auto">
-            <option value="date" {% if sort == 'date' %}selected{% endif %}>Trier par Date</option>
-            <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>Trier par Popularité</option>
-        </select>
-    </div>
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    <script>
-        document.getElementById("sort-posts").addEventListener("change", function () {
-            let selected = this.value;
-            window.location.href = "?sort=" + selected;
-        });
-    </script>
+    <!-- Contenu initial de la page -->
+    <div class="container mt-4">
+        <!-- Bouton "Créer un Post" -->
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{{ path('post_new') }}" class="btn btn-primary shadow-sm">Créer un Post</a>
+        </div>
 
-    <div class="row">
-        {% for post in posts %}
-            <div class="col-12 mb-4">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                    <!-- Image du post -->
-                    {% if post.contenu %}
-                        <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">
-                    {% else %}
-                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-secondary" 
-                             style="height: 400px; font-size: 18px; font-weight: bold;">
-                            Aucune image disponible
-                        </div>
-                    {% endif %}
+        <!-- Sélecteur de tri -->
+        <div class="d-flex justify-content-end mb-4">
+            <select id="sort-posts" class="form-select w-auto">
+                <option value="date" {% if sort == 'date' %}selected{% endif %}>Trier par Date</option>
+                <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>Trier par Popularité</option>
+            </select>
+        </div>
 
-                    <div class="card-body text-center p-4">
-                        <!-- Titre du post -->
-                        <h4 class="card-title fw-bold text-primary">{{ post.titre }}</h4>
+        <script>
+            document.getElementById("sort-posts").addEventListener("change", function () {
+                let selected = this.value;
+                window.location.href = "?sort=" + selected;
+            });
+        </script>
 
-                        <!-- Légende du post avec "Voir plus" -->
-                        {% if post.legende %}
-                            <p class="post-legende" id="legende-{{ post.id }}">
-                                "{{ post.legende }}"
-                            </p>
-                            {% if post.legende|length > 100 %}
-                                <button class="btn-see-more" onclick="toggleLegende({{ post.id }})">
-                                    Voir plus
-                                </button>
-                            {% endif %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                        <!-- Image du post -->
+                        {% if post.contenu %}
+                            <img src="{{ asset('uploads/' ~ post.contenu) }}" class="card-img-top" alt="Image du post" style="max-height: 400px; width: 100%; object-fit: contain;">
+                        {% else %}
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-secondary" 
+                                 style="height: 400px; font-size: 18px; font-weight: bold;">
+                                Aucune image disponible
+                            </div>
                         {% endif %}
 
-                        <!-- Date de publication -->
-                        <p class="card-text text-muted" style="font-size: 14px;">
-                            🕒 {{ post.datePublication|date('d/m/Y H:i') }}
-                        </p>
+                        <div class="card-body text-center p-4">
+                            <!-- Titre du post -->
+                            <h4 class="card-title fw-bold text-primary">{{ post.titre }}</h4>
 
-                        <!-- Nombre de commentaires avec icône -->
-                        <p class="card-text text-muted" style="font-size: 14px;">
-                            <i class="fas fa-comment comment-icon"></i> {{ post.commentaires|length }} Commentaire(s)
-                        </p>
+                            <!-- Légende du post avec "Voir plus" -->
+                            {% if post.legende %}
+                                <p class="post-legende" id="legende-{{ post.id }}">
+                                    "{{ post.legende }}"
+                                </p>
+                                {% if post.legende|length > 100 %}
+                                    <button class="btn-see-more" onclick="toggleLegende({{ post.id }})">
+                                        Voir plus
+                                    </button>
+                                {% endif %}
+                            {% endif %}
 
-                        <!-- Boutons Like & Dislike pour le Post -->
-                        <div class="d-flex justify-content-center gap-3 mt-3">
-                            <button class="btn btn-outline-success like-post" data-id="{{ post.id }}">
-                                👍 <span id="likes-count-{{ post.id }}">{{ post.likes }}</span>
-                            </button>
-                            <button class="btn btn-outline-danger dislike-post" data-id="{{ post.id }}">
-                                👎 <span id="dislikes-count-{{ post.id }}">{{ post.dislikes }}</span>
-                            </button>
-                        </div>
+                            <!-- Date de publication -->
+                            <p class="card-text text-muted" style="font-size: 14px;">
+                                🕒 {{ post.datePublication|date('d/m/Y H:i') }}
+                            </p>
 
-                        <!-- Bouton "Voir Post" -->
-                        <div class="d-flex justify-content-center mt-3">
-                            <a href="{{ path('post_show', {'id': post.id}) }}" class="btn btn-info btn-sm px-4 shadow-sm">
-                                <i class="fas fa-eye"></i> Voir Post
-                            </a>
-                        </div>
+                            <!-- Nombre de commentaires avec icône -->
+                            <p class="card-text text-muted" style="font-size: 14px;">
+                                <i class="fas fa-comment comment-icon"></i> {{ post.commentaires|length }} Commentaire(s)
+                            </p>
 
-                        <!-- Commentaires -->
-                        <h3 class="mt-4">Commentaires</h3>
+                            <!-- Boutons Like & Dislike pour le Post -->
+                            <div class="d-flex justify-content-center gap-3 mt-3">
+                                <button class="btn btn-outline-success like-post" data-id="{{ post.id }}">
+                                    👍 <span id="likes-count-{{ post.id }}">{{ post.likes }}</span>
+                                </button>
+                                <button class="btn btn-outline-danger dislike-post" data-id="{{ post.id }}">
+                                    👎 <span id="dislikes-count-{{ post.id }}">{{ post.dislikes }}</span>
+                                </button>
+                            </div>
 
-                        {% for commentaire in post.commentaires %}
-                            <div class="card mt-2">
-                                <div class="card-body">
-                                    <p>{{ commentaire.contenu }}</p>
-                                    <p class="text-muted" style="font-size: 12px;">
-                                        Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}
-                                    </p>
+                            <!-- Bouton "Voir Post" -->
+                            <div class="d-flex justify-content-center mt-3">
+                                <a href="{{ path('post_show', {'id': post.id}) }}" class="btn btn-info btn-sm px-4 shadow-sm">
+                                    <i class="fas fa-eye"></i> Voir Post
+                                </a>
+                            </div>
 
-                                    <!-- Boutons Like & Dislike pour le Commentaire -->
-                                    <div class="d-flex justify-content-center gap-2 mt-2">
-                                        <button class="btn btn-outline-success like-comment" data-id="{{ commentaire.id }}">
-                                            👍 <span id="likes-comment-{{ commentaire.id }}">{{ commentaire.likes }}</span>
-                                        </button>
-                                        <button class="btn btn-outline-danger dislike-comment" data-id="{{ commentaire.id }}">
-                                            👎 <span id="dislikes-comment-{{ commentaire.id }}">{{ commentaire.dislikes }}</span>
-                                        </button>
-                                    </div>
+                            <!-- Commentaires -->
+                            <h3 class="mt-4">Commentaires</h3>
 
-                                    <!-- Boutons Modifier & Supprimer du commentaire -->
-                                    <div class="d-flex justify-content-end gap-2 mt-2">
-                                        <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-outline-warning btn-sm px-3 shadow-sm">
-                                            ✏️ Modifier
-                                        </a>
-                                        <form action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" method="post" 
-                                              onsubmit="return confirm('Voulez-vous vraiment supprimer ce commentaire ?');">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm px-3 shadow-sm">🗑️ Supprimer</button>
+                            {% for commentaire in post.commentaires %}
+                                <div class="card mt-2">
+                                    <div class="card-body">
+                                        <p>{{ commentaire.contenu }}</p>
+                                        <p class="text-muted" style="font-size: 12px;">
+                                            Ajouté le {{ commentaire.dateCommentaire|date('d/m/Y H:i') }}
+                                        </p>
+
+                                        <!-- Bouton pour signaler le commentaire -->
+                                        <form action="{{ path('commentaire_report', {'id': commentaire.id}) }}" method="post" class="d-inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-flag"></i> Signaler
+                                            </button>
                                         </form>
+
+                                        <!-- Boutons Like & Dislike pour le Commentaire -->
+                                        <div class="d-flex justify-content-center gap-2 mt-2">
+                                            <button class="btn btn-outline-success like-comment" data-id="{{ commentaire.id }}">
+                                                👍 <span id="likes-comment-{{ commentaire.id }}">{{ commentaire.likes }}</span>
+                                            </button>
+                                            <button class="btn btn-outline-danger dislike-comment" data-id="{{ commentaire.id }}">
+                                                👎 <span id="dislikes-comment-{{ commentaire.id }}">{{ commentaire.dislikes }}</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Boutons Modifier & Supprimer du commentaire -->
+                                        <div class="d-flex justify-content-end gap-2 mt-2">
+                                            <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-outline-warning btn-sm px-3 shadow-sm">
+                                                ✏️ Modifier
+                                            </a>
+                                            <form action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" method="post" 
+                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce commentaire ?');">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 shadow-sm">🗑️ Supprimer</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% else %}
-                            <p class="text-muted">Aucun commentaire pour le moment.</p>
-                        {% endfor %}
+                            {% else %}
+                                <p class="text-muted">Aucun commentaire pour le moment.</p>
+                            {% endfor %}
 
-                        <!-- Bouton pour ajouter un commentaire -->
-                        <a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">
-                            <i class="fas fa-comment"></i> Ajouter un commentaire
-                        </a>
-
-                        <!-- Boutons Modifier & Supprimer du post -->
-                        <div class="d-flex justify-content-center gap-3 mt-3">
-                            <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-outline-warning btn-sm px-4 shadow-sm">
-                                ✏️ Modifier
+                            <!-- Bouton pour ajouter un commentaire -->
+                            <a href="{{ path('commentaire_new', {'id': post.id}) }}" class="btn btn-primary mt-3">
+                                <i class="fas fa-comment"></i> Ajouter un commentaire
                             </a>
-                            <form action="{{ path('post_delete', {'id': post.id}) }}" method="post" 
-                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce post ?');">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-4 shadow-sm">🗑️ Supprimer</button>
-                            </form>
+
+                            <!-- Boutons Modifier & Supprimer du post -->
+                            <div class="d-flex justify-content-center gap-3 mt-3">
+                                <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-outline-warning btn-sm px-4 shadow-sm">
+                                    ✏️ Modifier
+                                </a>
+                                <form action="{{ path('post_delete', {'id': post.id}) }}" method="post" 
+                                      onsubmit="return confirm('Voulez-vous vraiment supprimer ce post ?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm px-4 shadow-sm">🗑️ Supprimer</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            <p class="text-center text-muted">Aucun post disponible.</p>
-        {% endfor %}
+            {% else %}
+                <p class="text-center text-muted">Aucun post disponible.</p>
+            {% endfor %}
+        </div>
     </div>
-</div>
 
-<!-- Script pour gérer le "Voir plus" des légendes -->
-<script>
-    function toggleLegende(postId) {
-        const legende = document.getElementById(`legende-${postId}`);
-        const button = legende.nextElementSibling;
+    <!-- Script pour gérer le "Voir plus" des légendes -->
+    <script>
+        function toggleLegende(postId) {
+            const legende = document.getElementById(`legende-${postId}`);
+            const button = legende.nextElementSibling;
 
-        if (legende.classList.contains('expanded')) {
-            legende.classList.remove('expanded');
-            button.textContent = 'Voir plus';
-        } else {
-            legende.classList.add('expanded');
-            button.textContent = 'Voir moins';
+            if (legende.classList.contains('expanded')) {
+                legende.classList.remove('expanded');
+                button.textContent = 'Voir plus';
+            } else {
+                legende.classList.add('expanded');
+                button.textContent = 'Voir moins';
+            }
         }
-    }
-</script>
+    </script>
 
-<!-- Inclusion du script AJAX pour Like/Dislike -->
-<script src="{{ asset('js/like.js') }}"></script>
+    <!-- Inclusion du script AJAX pour Like/Dislike -->
+    <script src="{{ asset('js/like.js') }}"></script>
 {% endblock %}
