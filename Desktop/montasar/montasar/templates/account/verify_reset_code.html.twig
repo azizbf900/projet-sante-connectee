@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Reset Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            max-width: 400px;
+            width: 90%;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .form-container h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-container .form-control {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container a {
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+                width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Verify Reset Code</h1>
+        {{ form_start(verifyForm, {'action': path('app_verify_reset_code', {'email': email}), 'method': 'POST'}) }}
+            <div>
+                {{ form_row(verifyForm.resetCode, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Enter reset code'
+                    }
+                }) }}
+            </div>
+            <div>
+                {{ form_row(verifyForm.newPassword, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Enter new password'
+                    }
+                }) }}
+            </div>
+            <button type="submit">Change Password</button>
+            <a href="{{ path('app_front_signin') }}">Back to Sign In</a>
+        {{ form_end(verifyForm) }}
+    </div>
+</body>
+</html>

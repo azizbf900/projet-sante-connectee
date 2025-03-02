@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat with Qwen{% endblock %}
+
+{% block content %}
+<style>
+    /* General Reset */
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        height: 100%;
+    }
+
+    /* Chat Container */
+    .chat-container {
+        width: 100%;
+        max-width: 800px;
+        height: 80vh;
+        margin: 20px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Chat Header */
+    .chat-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px 25px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header h3 {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    /* Chat Body */
+    .chat-body {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .message {
+        padding: 12px 18px;
+        border-radius: 20px;
+        max-width: 75%;
+        word-wrap: break-word;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 5px;
+    }
+
+    .message.bot {
+        background-color: #ffffff;
+        color: #333;
+        margin-right: auto;
+        border: 1px solid #e0e0e0;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .message.error {
+        background-color: #ff4444;
+        color: white;
+        text-align: center;
+        margin: 0 auto;
+        width: 80%;
+    }
+
+    /* Chat Footer */
+    .chat-footer {
+        padding: 20px;
+        background-color: #ffffff;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .chat-footer form {
+        display: flex;
+        gap: 15px;
+    }
+
+    .chat-footer input[type="text"] {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #007bff;
+        border-radius: 25px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+    }
+
+    .chat-footer input[type="text"]:focus {
+        outline: none;
+        border-color: #0056b3;
+    }
+
+    .chat-footer button {
+        padding: 12px 30px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .chat-footer button:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0056b3;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h3>Chat with Qwen</h3>
+    </div>
+    <div class="chat-body">
+        {% if app.session.get('conversation') %}
+            {% for message in app.session.get('conversation') %}
+                <div class="message user">You: {{ message.question }}</div>
+                <div class="message bot">Qwen: {{ message.answer }}</div>
+            {% endfor %}
+        {% endif %}
+        {% for flash in app.flashes('danger') %}
+            <div class="message error">{{ flash }}</div>
+        {% endfor %}
+    </div>
+    <div class="chat-footer">
+        <form method="POST" action="{{ path('app_chat') }}">
+            <input type="text" name="message" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

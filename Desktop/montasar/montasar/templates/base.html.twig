@@ -17,7 +17,7 @@
         <div id="head">
             <div id="slide_nav">
                 <ion-icon class="dash" id="dash1" name="menu-outline"></ion-icon>
-                <ion-icon class="dash" id="dash2"  name="close-outline"></ion-icon>
+                <ion-icon class="dash" id="dash2" name="close-outline"></ion-icon>
                 <img id="img_logo" src="{{ asset('images/logo.png') }}" alt="" />
                 <h2>Sana<span style="color:rgb(23, 7, 255);">Connect</span></h2>
             </div>
@@ -30,49 +30,42 @@
                         <li id="li_nav"><a class="nav-link" href="{{ path('app_anonce_index') }}">Evenement</a></li>
                         <li id="li_nav"><a class="nav-link" href="{{ path('app_stage_index') }}">Formation</a></li>
                         <li id="li_nav"><a class="nav-link" href="{{ path('app_evenement_index') }}">Annonces</a></li>
-                
                         <li id="li_nav"><a class="nav-link" href="#Cours">Rendez Vous</a></li>
-                        
+                        <li id="li_nav"><a class="nav-link" href="{{ path('app_chat') }}">Assistant</a></li>
+                        <!-- Add Notifications Button -->
+                        <li id="li_nav"><a class="nav-link" href="{{ path('app_notifications') }}">Notifications</a></li>
                     </ul>
                 </nav>
             </header>
             <div id="profile" class="profile-container">
                 <ion-icon id="notif" name="notifications-outline"></ion-icon>
-                <ion-icon id="message" name="chatbox-ellipses-outline"></ion-icon>
-                
-                <!-- Profile Image -->
                 <img src="{{ asset('images/profile.png') }}" id="img_profile" alt="">
-
-                <!-- Profile Dropdown -->
                 {% if app.session.get('user') %}
                 <div id="profile-dropdown" class="dropdown-content">
                     <p>{{ app.session.get('user').nom }} {{ app.session.get('user').prenom }}</p>
-                    <a href="{{ path('app_logout') }}" >Logout</a>
+                    <a href="{{ path('app_logout') }}">Logout</a>
                 </div>
                 {% endif %}
             </div>
-
         </div>
         <div id="body">
             <div id="menu">
-                    <div id="GestionEvaluation">
-                        <div id="togother">
+                <div id="GestionEvaluation">
+                    <div id="togother">
                         <ion-icon id="logo_m" name="clipboard-outline"></ion-icon>
                         <a id="a_module" href="{{ path('app_account_index') }}">Gestion Des Accounts</a>
-                        </div>
-                        <ul id="ul_eva">
-                           
-                            <li class="li_eva">
-                                <a  href="{{ path('app_account_index') }}"  >Users Page</a>
-                             </li>
-                        </ul>
                     </div>
-                    <br/>
+                    <ul id="ul_eva">
+                        <li class="li_eva">
+                            <a href="{{ path('app_account_index') }}">Users Page</a>
+                        </li>
+                    </ul>
+                </div>
+                <br/>
             </div>
             <div id="content">
-            {% block content %}
-            
-            {% endblock  %}
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
         <div id="footer"></div>
@@ -81,8 +74,6 @@
     <script src="{{ asset('js/quiz.js') }}"></script>
     <script src="{{ asset('js/export.js') }}"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-
-
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 

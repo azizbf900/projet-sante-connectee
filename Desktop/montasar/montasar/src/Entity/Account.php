@@ -55,6 +55,9 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 6, minMessage: "Le mot de passe doit comporter au moins {{ limit }} caractères.")]
     private ?string $password = null;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $resetCode = null;
+
 
 
 
@@ -164,4 +167,16 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
         return $this;
     }
+
+    public function getResetCode(): ?int
+{
+    return $this->resetCode;
+}
+
+public function setResetCode(?int $resetCode): self
+{
+    $this->resetCode = $resetCode;
+
+    return $this;
+}
 }

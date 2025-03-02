@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<style>
+    /* General Reset */
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        height: 100%;
+    }
+
+    /* Notifications Container */
+    .notifications-container {
+        width: 100%;
+        max-width: 800px;
+        height: 80vh;
+        margin: 20px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Notifications Header */
+    .notifications-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px 25px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .notifications-header h3 {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    /* Notifications Body */
+    .notifications-body {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .notification {
+        padding: 12px 18px;
+        border-radius: 20px;
+        background-color: #ffffff;
+        color: #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        word-wrap: break-word;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0056b3;
+    }
+</style>
+
+<div class="notifications-container">
+    <div class="notifications-header">
+        <h3>Notifications</h3>
+    </div>
+    <div class="notifications-body">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="notification">
+                    {{ notification.message }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No notifications found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
