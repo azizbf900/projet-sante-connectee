@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="rootCard"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.PostCardController"
+            prefHeight="500.0" prefWidth="600.0"
+            style="-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1;">
+    <children>
+        <VBox spacing="15.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+
+                <!-- Image du post -->
+                <ImageView fx:id="postImage"
+                           fitHeight="200.0"
+                           fitWidth="400.0"
+                           preserveRatio="true" />
+
+                <!-- Titre -->
+                <Label fx:id="postTitle"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+                <!-- Date -->
+                <Label fx:id="postDate"
+                       style="-fx-text-fill: gray;" />
+
+                <!-- Contenu -->
+                <Label fx:id="postContent"
+                       wrapText="true" />
+
+                <!-- Commentaires -->
+                <VBox spacing="10.0"
+                      style="-fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 10;">
+                    <children>
+                        <!-- Zone de saisie -->
+                        <HBox spacing="10.0">
+                            <children>
+                                <TextField fx:id="commentInput"
+                                           promptText="Ajouter un commentaire..."
+                                           HBox.hgrow="ALWAYS" />
+                                <Button text="Commenter"
+                                        onAction="#handleAddComment"
+                                        style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+                            </children>
+                        </HBox>
+
+                        <!-- Zone d'affichage des commentaires -->
+                        <VBox fx:id="commentContainer"
+                              spacing="10.0" />
+                    </children>
+                </VBox>
+
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
