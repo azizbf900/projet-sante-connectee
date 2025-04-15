@@ -1,0 +1,14 @@
+Services\ServicePosts.class
+controllers\FrontPostListController.class
+controllers\PostCardController.class
+controllers\BackPostTableController.class
+Services\ServiceCommentaire.class
+controllers\DetailPostController.class
+tests\MainFX.class
+org\example\Main.class
+tools\MyDataBase.class
+models\Commentaire.class
+models\Posts.class
+controllers\EditPostController.class
+controllers\BackPostTableController$1.class
+controllers\AddPostController.class

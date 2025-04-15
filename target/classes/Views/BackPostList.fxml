@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.BackPostListController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <VBox spacing="20" padding="20" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+        <!-- Titre -->
+        <Label text="Gestion des Posts" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+        <!-- Liste des posts scrollable -->
+        <ScrollPane fitToWidth="true" prefHeight="450">
+            <content>
+                <VBox fx:id="postListVBox" spacing="10" padding="10">
+                    <!-- Les éléments de posts seront ajoutés dynamiquement -->
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- Bouton ajouter -->
+        <HBox alignment="CENTER">
+            <Button text="➕ Ajouter un Post"
+                    fx:id="addPostButton"
+                    onAction="#handleAddPost"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </HBox>
+    </VBox>
+</AnchorPane>

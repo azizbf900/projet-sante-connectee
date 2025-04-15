@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.BackPostTableController"
+            prefHeight="600.0" prefWidth="850.0">
+
+    <VBox spacing="15.0" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+        <Label text="📋 Gestion des Posts" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+        <!-- Tableau -->
+        <TableView fx:id="tablePosts" prefHeight="300.0">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50.0"/>
+                <TableColumn fx:id="colTitre" text="Titre" prefWidth="150.0"/>
+                <TableColumn fx:id="colContenu" text="Image (Nom fichier)" prefWidth="200.0"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="120.0"/>
+                <TableColumn fx:id="colLegende" text="Légende" prefWidth="200.0"/>
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="200.0"/>
+            </columns>
+        </TableView>
+
+        <!-- Bouton redirection -->
+        <HBox spacing="10">
+            <Button fx:id="btnVersAjout" text="➕ Ajouter un Post"
+                    onAction="#allerVersAjoutPost"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+        </HBox>
+    </VBox>
+</AnchorPane>

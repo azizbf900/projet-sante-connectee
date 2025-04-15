@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.EditPostController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <VBox spacing="20" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <Text text="Modifier le Post">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Text>
+
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT"/>
+                <ColumnConstraints halignment="LEFT"/>
+            </columnConstraints>
+
+            <!-- Titre -->
+            <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <!-- Légende -->
+            <Label text="Légende:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextArea fx:id="legendeField" prefRowCount="3" prefWidth="300" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <!-- Image -->
+            <Label text="Image actuelle:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="200" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Button text="Changer d'image" fx:id="chooseImageBtn" onAction="#handleChooseImage" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <!-- Label erreur -->
+            <Label fx:id="errorLabel" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-text-fill: red;"/>
+        </GridPane>
+
+        <!-- Bouton Modifier -->
+        <Button text="✅ Modifier" fx:id="updateBtn" onAction="#handleUpdatePost"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"/>
+    </VBox>
+</AnchorPane>

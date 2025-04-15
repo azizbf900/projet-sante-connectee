@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.DetailPostController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <VBox spacing="15" alignment="TOP_CENTER" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <Label text="Détail du Post" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+        <!-- Image du post -->
+        <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="400.0" preserveRatio="true" />
+
+        <!-- Titre -->
+        <Label fx:id="titreLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <!-- Date -->
+        <Label fx:id="dateLabel" style="-fx-text-fill: gray;" />
+
+        <!-- Légende (utilisation de Label au lieu de Text) -->
+        <Label fx:id="legendeLabel" wrapText="true" maxWidth="600.0" style="-fx-font-size: 14px;" />
+
+        <!-- Nombre de commentaires -->
+        <Label fx:id="commentCountLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0077cc;" />
+
+        <!-- Zone des commentaires -->
+        <VBox fx:id="commentsSection" spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1;" />
+
+        <!-- Bouton retour -->
+        <Button text="⬅ Retour à la liste" fx:id="backButton" onAction="#handleBack" style="-fx-background-color: #ccc;" />
+    </VBox>
+</AnchorPane>
