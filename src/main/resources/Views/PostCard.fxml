@@ -1,64 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootCard"
-            xmlns="http://javafx.com/javafx/20.0.2"
+<AnchorPane fx:id="rootCard" prefHeight="500.0" prefWidth="600.0"
+            style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);"
+            xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.PostCardController"
-            prefHeight="500.0" prefWidth="600.0"
-            style="-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1;">
+            fx:controller="controllers.PostCardController">
     <children>
-        <VBox spacing="15.0"
-              AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0"
-              AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+        <VBox layoutX="1.6" layoutY="1.6" prefHeight="498.0" prefWidth="600.0" spacing="15.0"
+              AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="1.0"
+              style="-fx-padding: 20;">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
             <children>
 
-                <!-- Image du post -->
-                <ImageView fx:id="postImage"
-                           fitHeight="200.0"
-                           fitWidth="400.0"
-                           preserveRatio="true" />
+                <!-- Image du post centrée -->
+                <HBox alignment="CENTER">
+                    <ImageView fx:id="postImage"
+                               fitHeight="220.0"
+                               fitWidth="540.0"
+                               preserveRatio="true"
+                               smooth="true"
+                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.5, 0, 4);
+                                      -fx-background-radius: 10;
+                                      -fx-border-radius: 10;
+                                      -fx-border-color: #dee2e6;
+                                      -fx-border-width: 1;" />
+                </HBox>
 
                 <!-- Titre -->
                 <Label fx:id="postTitle"
-                       style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" />
 
                 <!-- Date -->
                 <Label fx:id="postDate"
-                       style="-fx-text-fill: gray;" />
+                       style="-fx-text-fill: #999999; -fx-font-size: 12px;" />
 
                 <!-- Contenu -->
                 <Label fx:id="postContent"
-                       wrapText="true" />
+                       wrapText="true"
+                       style="-fx-font-size: 14px; -fx-text-fill: #555;" />
+
+                <!-- Section Like / Dislike -->
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button fx:id="likeButton"
+                                text="👍"
+                                onAction="#handleLike"
+                                style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-background-radius: 5;" />
+                        <Label fx:id="likeCountLabel" text="0" style="-fx-font-size: 14px;" />
+
+                        <Button fx:id="dislikeButton"
+                                text="👎"
+                                onAction="#handleDislike"
+                                style="-fx-background-color: #ffebee; -fx-text-fill: #c62828; -fx-background-radius: 5;" />
+                        <Label fx:id="dislikeCountLabel" text="0" style="-fx-font-size: 14px;" />
+                    </children>
+                </HBox>
 
                 <!-- Commentaires -->
                 <VBox spacing="10.0"
-                      style="-fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 10;">
+                      style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #f9f9f9; -fx-background-radius: 8; -fx-border-radius: 8;">
                     <children>
                         <!-- Zone de saisie -->
                         <HBox spacing="10.0">
                             <children>
                                 <TextField fx:id="commentInput"
                                            promptText="Ajouter un commentaire..."
-                                           HBox.hgrow="ALWAYS" />
-                                <Button text="Commenter"
-                                        onAction="#handleAddComment"
-                                        style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+                                           HBox.hgrow="ALWAYS"
+                                           style="-fx-background-radius: 5; -fx-border-color: #ccc;" />
+                                <Button onAction="#handleAddComment"
+                                        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 6 12;"
+                                        text="Commenter" />
                             </children>
                         </HBox>
 
                         <!-- Zone d'affichage des commentaires -->
-                        <VBox fx:id="commentContainer"
-                              spacing="10.0" />
+                        <VBox fx:id="commentContainer" spacing="10.0"
+                              style="-fx-padding: 5;" />
                     </children>
                 </VBox>
 

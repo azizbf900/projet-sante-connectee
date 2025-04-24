@@ -15,14 +15,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="613.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddPostController">
+<AnchorPane prefHeight="613.0" prefWidth="749.0" style="-fx-background-color: #cce5ff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddPostController">
    <children>
       <VBox layoutX="45.0" layoutY="26.0" prefHeight="553.0" prefWidth="670.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ajouter un Nouveau Post">
                <font>
-                  <Font name="Algerian" size="30.0" />
+                  <Font name="Arial Bold Italic" size="30.0" />
                </font>
+               <VBox.margin>
+                  <Insets left="65.0" />
+               </VBox.margin>
             </Text>
             <GridPane alignment="TOP_CENTER" prefHeight="394.0" prefWidth="670.0">
               <columnConstraints>
@@ -54,12 +57,12 @@
             </GridPane>
             <HBox prefHeight="66.0" prefWidth="670.0" spacing="200.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleAddPost" prefHeight="26.0" prefWidth="173.0" text="Ajouter">
+                  <Button mnemonicParsing="false" onAction="#handleAddPost" prefHeight="26.0" prefWidth="173.0" style="-fx-background-color: #007bff;" text="Ajouter">
                      <font>
                         <Font name="Arial Bold Italic" size="17.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="151.0" text="Annuler">
+                  <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="151.0" style="-fx-background-color: #ff0000;" text="Annuler">
                      <font>
                         <Font name="Arial Bold Italic" size="17.0" />
                      </font>

@@ -54,8 +54,24 @@ public class BackPostTableController {
             {
                 btnEdit.setOnAction(event -> {
                     Posts post = getTableView().getItems().get(getIndex());
-                    // Redirection possible vers interface de modification si tu veux
-                    showAlert(Alert.AlertType.INFORMATION, "Modifier", "Fonction de modification à implémenter.");
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/EditPost.fxml"));
+                        Parent root = loader.load();
+
+                        EditPostController controller = loader.getController();
+                        controller.setPostToEdit(post);
+
+                        Stage stage = new Stage();
+                        stage.setTitle("Modifier le Post");
+                        stage.setScene(new Scene(root));
+                        stage.showAndWait();
+
+                        afficherPosts(); // Refresh après edit
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger l'interface de modification.");
+                    }
                 });
 
                 btnDelete.setOnAction(event -> {
@@ -105,7 +121,7 @@ public class BackPostTableController {
     @FXML
     private void allerVersAjoutPost() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/AjoutPost.fxml")); // Mets ici le bon chemin vers ton fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/AjoutPost.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();

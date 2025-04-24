@@ -1,38 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontPostListController">
-    <children>
-        <!-- VBox principal qui contient le titre et le ScrollPane -->
-        <VBox layoutX="92.0" layoutY="142.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0"
-              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane prefHeight="800.0" prefWidth="903.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontPostListController">
 
-            <!-- Padding autour du VBox -->
+    <children>
+        <VBox layoutX="92.0" layoutY="142.0" prefHeight="800.0" prefWidth="903.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
 
             <children>
-                <!-- Titre de la page -->
-                <Label text="Tous les Posts">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
 
-                <!-- ScrollPane pour contenir la liste des posts -->
-                <ScrollPane prefHeight="550.0" prefWidth="560.0" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+                <!-- Logo + Titre côte à côte -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <children>
+                        <ImageView fx:id="logoImage" fitHeight="40.0" fitWidth="44.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/sanaconnect_logo.jpg.jpg" />
+                            </image>
+                        </ImageView>
+
+                        <Label style="-fx-text-fill: #343a40; -fx-font-size: 24px; -fx-font-weight: bold;" text="Vitalink">
+                            <font>
+                                <Font size="21.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+
+                <!-- 🔍 Recherche -->
+                <TextField fx:id="searchField" promptText="Rechercher un post par titre..." style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 8; -fx-border-color: #ced4da;" />
+
+                <!-- 🔽 Tri -->
+                <ComboBox fx:id="sortComboBox" promptText="Trier par date" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+
+                <!-- 📜 ScrollPane pour les posts -->
+                <ScrollPane hbarPolicy="NEVER" prefHeight="675.0" prefWidth="863.0" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #dee2e6; -fx-border-width: 1;" vbarPolicy="ALWAYS">
                     <content>
-                        <!-- VBox qui contiendra dynamiquement les cartes des posts -->
-                        <VBox fx:id="postContainer" prefHeight="546.0" prefWidth="558.0" />
+                        <VBox fx:id="postContainer" prefHeight="667.0" prefWidth="842.0" style="-fx-spacing: 15; -fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 10;" />
                     </content>
                 </ScrollPane>
+
             </children>
         </VBox>
     </children>

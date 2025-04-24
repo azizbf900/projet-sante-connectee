@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import models.Posts;
 
 import java.io.File;
@@ -68,6 +69,7 @@ public class EditPostController {
 
     @FXML
     private void handleUpdatePost() {
+        errorLabel.setText("");
         String titre = titreField.getText().trim();
         String legende = legendeField.getText().trim();
 
@@ -78,12 +80,23 @@ public class EditPostController {
 
         String imageName = currentPost.getContenu(); // valeur par défaut
 
-        // Si une nouvelle image est choisie
         if (selectedImage != null) {
             try {
-                imageName = selectedImage.getName();
+                // Nom unique pour éviter les conflits
+                String extension = selectedImage.getName().substring(selectedImage.getName().lastIndexOf("."));
+                imageName = System.currentTimeMillis() + extension;
+
                 Path destPath = Paths.get(destinationFolder + imageName);
                 Files.copy(selectedImage.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
+
+                // Suppression ancienne image si différente
+                if (!currentPost.getContenu().equals(imageName)) {
+                    File oldFile = new File(destinationFolder + currentPost.getContenu());
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+                }
+
             } catch (IOException e) {
                 errorLabel.setText("❌ Erreur lors de la copie de la nouvelle image.");
                 e.printStackTrace();
@@ -91,14 +104,17 @@ public class EditPostController {
             }
         }
 
-        // Mise à jour de l'objet
         currentPost.setTitre(titre);
         currentPost.setLegende(legende);
         currentPost.setContenu(imageName);
         currentPost.setDatePublication(LocalDate.now());
 
-        // Appel du service
         servicePosts.modifierPost(currentPost);
+        errorLabel.setStyle("-fx-text-fill: green;");
         errorLabel.setText("✅ Post modifié avec succès !");
+
+        // Fermer la fenêtre après succès
+        Stage stage = (Stage) updateBtn.getScene().getWindow();
+        stage.close();
     }
 }

@@ -44,7 +44,8 @@ public class DetailPostController {
         this.commentCount = nbCommentaires;
 
         // Charger l'image depuis le dossier resources/images
-        InputStream stream = getClass().getResourceAsStream("/images/" + imageName);
+        InputStream stream = getClass().getResourceAsStream(imageName.startsWith("/images/") ? imageName : "/images/" + imageName);
+
         if (stream != null) {
             imageView.setImage(new Image(stream));
         } else {

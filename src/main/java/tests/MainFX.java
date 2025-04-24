@@ -7,21 +7,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainFX extends Application {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/Views/FrontPostList.fxml"));
+        Scene scene = new Scene(root);
+
+        // 🔽 Ajoute ici ta feuille de style
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+
+        primaryStage.setTitle("Vitalink Front");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        try {
-            // Charger l'interface FXML
-            Parent root = FXMLLoader.load(getClass().getResource("/Views/BackPostTable.fxml")); // adapte si besoin
-            primaryStage.setTitle("Ajouter un Post");
-            primaryStage.setScene(new Scene(root, 800, 600)); // adapte la taille si nécessaire
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

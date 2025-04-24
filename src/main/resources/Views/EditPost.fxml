@@ -1,50 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.EditPostController"
-            prefHeight="600.0" prefWidth="800.0">
+<AnchorPane prefHeight="594.0" prefWidth="729.0" style="-fx-background-color: #f2f4f8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EditPostController"> <!-- fond doux -->
 
-    <VBox spacing="20" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
-        <Text text="Modifier le Post">
+    <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="36.0" prefHeight="574.0" prefWidth="711.0" spacing="20" style="-fx-padding: 20;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="36.0">
+
+        <Text style="-fx-fill: #343a40;" text="Modifier le Post">
             <font>
-                <Font name="System Bold" size="24.0"/>
+                <Font name="System Bold" size="26.0" />
             </font>
         </Text>
 
-        <GridPane hgap="10" vgap="10">
+        <GridPane hgap="12" prefHeight="422.0" prefWidth="701.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" vgap="12">
             <columnConstraints>
-                <ColumnConstraints halignment="RIGHT"/>
-                <ColumnConstraints halignment="LEFT"/>
+                <ColumnConstraints halignment="RIGHT" />
+                <ColumnConstraints halignment="LEFT" />
             </columnConstraints>
 
             <!-- Titre -->
-            <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label style="-fx-text-fill: #495057;" text="Titre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="titreField" style="-fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
             <!-- Légende -->
-            <Label text="Légende:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextArea fx:id="legendeField" prefRowCount="3" prefWidth="300" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label style="-fx-text-fill: #495057;" text="Légende:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextArea fx:id="legendeField" prefRowCount="3" prefWidth="300" style="-fx-background-radius: 5;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
             <!-- Image -->
-            <Label text="Image actuelle:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="200" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label style="-fx-text-fill: #495057;" text="Image actuelle:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="200" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Button text="Changer d'image" fx:id="chooseImageBtn" onAction="#handleChooseImage" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Button fx:id="chooseImageBtn" onAction="#handleChooseImage" style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 5;" text="Changer d'image" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
             <!-- Label erreur -->
-            <Label fx:id="errorLabel" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-text-fill: red;"/>
+            <Label fx:id="errorLabel" style="-fx-text-fill: red; -fx-font-style: italic;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
         </GridPane>
 
         <!-- Bouton Modifier -->
-        <Button text="✅ Modifier" fx:id="updateBtn" onAction="#handleUpdatePost"
-                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"/>
+        <Button fx:id="updateBtn" onAction="#handleUpdatePost" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 8;" text="✅ Modifier" />
     </VBox>
 </AnchorPane>

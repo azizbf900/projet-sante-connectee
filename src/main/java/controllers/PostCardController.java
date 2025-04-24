@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import models.Commentaire;
 import models.Posts;
 import Services.ServiceCommentaire;
+import Services.ServicePosts;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,11 +44,18 @@ public class PostCardController {
     @FXML
     private AnchorPane rootCard;
 
+    @FXML
+    private Label likeCountLabel;
+
+    @FXML
+    private Label dislikeCountLabel;
+
     private Posts post;
+
     private final ServiceCommentaire serviceCommentaire = new ServiceCommentaire();
+    private final ServicePosts servicePosts = new ServicePosts();
 
     public void initialize() {
-        // Cliquer sur la carte ouvre la page de détail
         rootCard.setOnMouseClicked(event -> {
             if (post != null) {
                 openDetailPage();
@@ -58,12 +66,10 @@ public class PostCardController {
     public void setPostData(Posts post) {
         this.post = post;
 
-        // Infos de base
         postTitle.setText(post.getTitre());
         postContent.setText(post.getLegende());
         postDate.setText(post.getDatePublication().toString());
 
-        // Charger l’image depuis /resources/images/
         String imagePath = "/images/" + post.getContenu();
         InputStream imageStream = getClass().getResourceAsStream(imagePath);
         if (imageStream != null) {
@@ -72,13 +78,21 @@ public class PostCardController {
             System.err.println("❌ Image non trouvée : " + imagePath);
         }
 
+        updateLikeDislikeLabels();
         loadComments();
+    }
+
+    private void updateLikeDislikeLabels() {
+        if (likeCountLabel != null && dislikeCountLabel != null && post != null) {
+            likeCountLabel.setText(String.valueOf(post.getLike()));
+            dislikeCountLabel.setText(String.valueOf(post.getDislike()));
+        }
     }
 
     private void loadComments() {
         commentContainer.getChildren().removeIf(node -> node instanceof HBox);
 
-        if (post == null) return; // Sécurité supplémentaire
+        if (post == null) return;
 
         List<Commentaire> commentaires = serviceCommentaire.getCommentairesByPostId(post.getId());
 
@@ -126,6 +140,24 @@ public class PostCardController {
             serviceCommentaire.ajouter(nouveau);
             commentInput.clear();
             loadComments();
+        }
+    }
+
+    @FXML
+    private void handleLike() {
+        if (post != null) {
+            post.setLike(post.getLike() + 1);
+            servicePosts.updateLikesDislikes(post);
+            updateLikeDislikeLabels();
+        }
+    }
+
+    @FXML
+    private void handleDislike() {
+        if (post != null) {
+            post.setDislike(post.getDislike() + 1);
+            servicePosts.updateLikesDislikes(post);
+            updateLikeDislikeLabels();
         }
     }
 
