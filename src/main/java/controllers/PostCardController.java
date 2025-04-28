@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import Services.TranslateService;
 
 public class PostCardController {
 
@@ -158,6 +159,16 @@ public class PostCardController {
             post.setDislike(post.getDislike() + 1);
             servicePosts.updateLikesDislikes(post);
             updateLikeDislikeLabels();
+        }
+    }
+
+
+    @FXML
+    private void handleTranslate() {
+        if (post != null) {
+            String texteOriginal = postContent.getText();
+            String texteTraduit = TranslateService.translateText(texteOriginal, "fr", "en");
+            postContent.setText(texteTraduit);
         }
     }
 

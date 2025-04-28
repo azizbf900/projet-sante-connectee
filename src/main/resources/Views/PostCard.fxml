@@ -9,84 +9,57 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootCard" prefHeight="500.0" prefWidth="600.0"
-            style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.PostCardController">
+<AnchorPane fx:id="rootCard" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #e3f2fd; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PostCardController">
     <children>
-        <VBox layoutX="1.6" layoutY="1.6" prefHeight="498.0" prefWidth="600.0" spacing="15.0"
-              AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="1.0"
-              style="-fx-padding: 20;">
+        <VBox layoutX="1.6" layoutY="1.6" prefHeight="498.0" prefWidth="600.0" spacing="15.0" style="-fx-padding: 20;" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="1.0">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
             <children>
 
                 <!-- Image du post centrée -->
-                <HBox alignment="CENTER">
-                    <ImageView fx:id="postImage"
-                               fitHeight="220.0"
-                               fitWidth="540.0"
-                               preserveRatio="true"
-                               smooth="true"
-                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.5, 0, 4);
-                                      -fx-background-radius: 10;
-                                      -fx-border-radius: 10;
-                                      -fx-border-color: #dee2e6;
-                                      -fx-border-width: 1;" />
+                <HBox alignment="CENTER" prefHeight="274.0" prefWidth="554.0">
+                    <ImageView fx:id="postImage" fitHeight="220.0" fitWidth="546.0" preserveRatio="true" smooth="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.5, 0, 4);                                       -fx-background-radius: 10;                                       -fx-border-radius: 10;                                       -fx-border-color: #dee2e6;                                       -fx-border-width: 1;" />
                 </HBox>
 
                 <!-- Titre -->
-                <Label fx:id="postTitle"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+                <Label fx:id="postTitle" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" />
 
                 <!-- Date -->
-                <Label fx:id="postDate"
-                       style="-fx-text-fill: #999999; -fx-font-size: 12px;" />
+                <Label fx:id="postDate" style="-fx-text-fill: #999999; -fx-font-size: 12px;" />
 
                 <!-- Contenu -->
-                <Label fx:id="postContent"
-                       wrapText="true"
-                       style="-fx-font-size: 14px; -fx-text-fill: #555;" />
+                <Label fx:id="postContent" style="-fx-font-size: 14px; -fx-text-fill: #555;" wrapText="true" />
 
                 <!-- Section Like / Dislike -->
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Button fx:id="likeButton"
-                                text="👍"
-                                onAction="#handleLike"
-                                style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-background-radius: 5;" />
-                        <Label fx:id="likeCountLabel" text="0" style="-fx-font-size: 14px;" />
+                        <Button fx:id="likeButton" onAction="#handleLike" style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-background-radius: 5;" text="👍" />
+                        <Label fx:id="likeCountLabel" style="-fx-font-size: 14px;" text="0" />
 
-                        <Button fx:id="dislikeButton"
-                                text="👎"
-                                onAction="#handleDislike"
-                                style="-fx-background-color: #ffebee; -fx-text-fill: #c62828; -fx-background-radius: 5;" />
-                        <Label fx:id="dislikeCountLabel" text="0" style="-fx-font-size: 14px;" />
+                        <Button fx:id="dislikeButton" onAction="#handleDislike" style="-fx-background-color: #ffebee; -fx-text-fill: #c62828; -fx-background-radius: 5;" text="👎" />
+                        <Label fx:id="dislikeCountLabel" style="-fx-font-size: 14px;" text="0" />
                     </children>
                 </HBox>
 
+                <Button text="🌎 Traduire"
+                        onAction="#handleTranslate"
+                        style="-fx-background-color: #2196f3; -fx-text-fill: white; -fx-background-radius: 5;" />
+
+
                 <!-- Commentaires -->
-                <VBox spacing="10.0"
-                      style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #f9f9f9; -fx-background-radius: 8; -fx-border-radius: 8;">
+                <VBox spacing="10.0" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #f9f9f9; -fx-background-radius: 8; -fx-border-radius: 8;">
                     <children>
                         <!-- Zone de saisie -->
                         <HBox spacing="10.0">
                             <children>
-                                <TextField fx:id="commentInput"
-                                           promptText="Ajouter un commentaire..."
-                                           HBox.hgrow="ALWAYS"
-                                           style="-fx-background-radius: 5; -fx-border-color: #ccc;" />
-                                <Button onAction="#handleAddComment"
-                                        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 6 12;"
-                                        text="Commenter" />
+                                <TextField fx:id="commentInput" promptText="Ajouter un commentaire..." style="-fx-background-radius: 5; -fx-border-color: #ccc;" HBox.hgrow="ALWAYS" />
+                                <Button onAction="#handleAddComment" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 6 12;" text="Commenter" />
                             </children>
                         </HBox>
 
                         <!-- Zone d'affichage des commentaires -->
-                        <VBox fx:id="commentContainer" spacing="10.0"
-                              style="-fx-padding: 5;" />
+                        <VBox fx:id="commentContainer" spacing="10.0" style="-fx-padding: 5;" />
                     </children>
                 </VBox>
 

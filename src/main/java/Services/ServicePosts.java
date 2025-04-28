@@ -17,7 +17,7 @@ public class ServicePosts {
 
     // Ajouter un post
     public void ajouterPost(Posts post) {
-        String sql = "INSERT INTO post (titre, contenu, date_publication, legende, `like`, dislike) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO post (titre, contenu, date_publication, legende, `likes`, dislikes) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setString(1, post.getTitre());
@@ -61,7 +61,7 @@ public class ServicePosts {
 
     // Modifier un post
     public void modifierPost(Posts post) {
-        String sql = "UPDATE post SET titre = ?, contenu = ?, date_publication = ?, legende = ?, `like` = ?, dislike = ? WHERE id = ?";
+        String sql = "UPDATE post SET titre = ?, contenu = ?, date_publication = ?, legende = ?, `likes` = ?, dislikes = ? WHERE id = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setString(1, post.getTitre());
@@ -103,7 +103,7 @@ public class ServicePosts {
 
     // Incrémenter un like
     public void incrementerLike(int postId) {
-        String sql = "UPDATE post SET `like` = `like` + 1 WHERE id = ?";
+        String sql = "UPDATE post SET `likes` = `likes` + 1 WHERE id = ?";
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, postId);
             pst.executeUpdate();
