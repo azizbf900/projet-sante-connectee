@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="detailAnchorPane" prefHeight="750.0" prefWidth="1080.0" stylesheets="@../styles/styles.css"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.FrontDetails">
+    <ScrollPane fitToWidth="true" layoutY="80.0" prefHeight="670.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+        <VBox prefWidth="1080.0" spacing="20.0">
+            <HBox alignment="CENTER_LEFT" spacing="30.0">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                </padding>
+                <AnchorPane id="imageContainer" prefHeight="350.0" prefWidth="450.0"
+                            styleClass="image-placeholder">
+                    <Label fx:id="produitInitialesLabel" alignment="CENTER" layoutX="180.0"
+                           layoutY="138.0" styleClass="initiales-grande" text="XX"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="150.0">
+                        <font>
+                            <Font name="System Bold" size="48.0"/>
+                        </font>
+                    </Label>
+                </AnchorPane>
+                <VBox prefHeight="350.0" prefWidth="570.0" spacing="15.0">
+                    <Label fx:id="categorieLabel" styleClass="categorie-label" text="Catégorie">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="nomLabel" styleClass="nom-produit" text="Nom du produit">
+                        <font>
+                            <Font name="System Bold" size="26.0"/>
+                        </font>
+                    </Label>
+                    <HBox alignment="CENTER_LEFT" prefHeight="45.0" spacing="20.0">
+                        <Label fx:id="prixLabel" styleClass="prix-label" text="59.99 €">
+                            <font>
+                                <Font name="System Bold" size="24.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="stockLabel" styleClass="stock-disponible" text="En stock">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                    <Separator prefWidth="200.0"/>
+                    <Label styleClass="section-title" text="Description">
+                        <font>
+                            <Font name="System Bold" size="16.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="descriptionLabel" prefHeight="100.0" prefWidth="570.0"
+                           styleClass="description-text"
+                           text="Description détaillée du produit qui explique ses caractéristiques, son utilisation, et ses avantages."
+                           wrapText="true">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <Separator prefWidth="200.0"/>
+                    <HBox alignment="CENTER_LEFT" spacing="15.0">
+                        <Button fx:id="btnAddToCart" mnemonicParsing="false" onAction="#addToCart"
+                                styleClass="btn-primary" text="Ajouter au panier">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="btnView3D" mnemonicParsing="false" onAction="#view3DModel"
+                                styleClass="btn-secondary" text="Voir en 3D">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+            </HBox>
+            <Separator prefWidth="200.0"/>
+            <VBox prefWidth="100.0" spacing="15.0">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="10.0"/>
+                </padding>
+                <Label styleClass="section-title" text="Informations techniques">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+                <HBox prefWidth="200.0" spacing="30.0">
+                    <VBox prefHeight="200.0" prefWidth="500.0" spacing="15.0">
+                        <Label styleClass="info-title" text="Caractéristiques">
+                            <font>
+                                <Font name="System Bold" size="16.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="caracteristiquesLabel" prefHeight="80.0"
+                               styleClass="info-text"
+                               text="Informations détaillées sur les caractéristiques techniques du produit."
+                               wrapText="true">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    <VBox prefHeight="200.0" prefWidth="500.0" spacing="15.0">
+                        <Label styleClass="info-title" text="Utilisation">
+                            <font>
+                                <Font name="System Bold" size="16.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="utilisationLabel" prefHeight="80.0" styleClass="info-text"
+                               text="Instructions d'utilisation et recommandations pour ce produit médical."
+                               wrapText="true">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+            </VBox>
+            <Separator prefWidth="200.0"/>
+            <VBox id="produitsSimilaires" prefWidth="100.0" spacing="15.0">
+                <padding>
+                    <Insets bottom="30.0" left="20.0" right="20.0" top="10.0"/>
+                </padding>
+                <Label styleClass="section-title" text="Produits similaires">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+                <HBox fx:id="produitsSimilairesBox" alignment="CENTER_LEFT" prefHeight="150.0"
+                      prefWidth="200.0" spacing="20.0"/>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+    <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="1080.0" styleClass="header" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <padding>
+            <Insets left="20.0" right="20.0"/>
+        </padding>
+        <Button fx:id="btnRetourProduits" mnemonicParsing="false" onAction="#retourProduits" styleClass="btn-retour" text="Retour aux produits">
+            <font>
+                <Font size="14.0" />
+            </font>
+            <HBox.margin>
+                <Insets left="10.0" />
+            </HBox.margin>
+        </Button>
+        <Label styleClass="header-title" text="Détails du produit">
+            <font>
+                <Font name="System Bold" size="20.0"/>
+            </font>
+            <HBox.margin>
+                <Insets left="15.0"/>
+            </HBox.margin>
+        </Label>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnAccueil" mnemonicParsing="false" onAction="#allerAccueil" styleClass="btn-home"
+                    text="🏠">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Button>
+        </HBox>
+    </HBox>
+</AnchorPane>

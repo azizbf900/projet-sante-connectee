@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefWidth="200" spacing="20" styleClass="sidebar" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml">
+    <!-- Logo -->
+    <VBox alignment="CENTER" spacing="10" styleClass="sidebar-logo">
+        <Label text="VitaLink" styleClass="sidebar-title"/>
+    </VBox>
+
+    <!-- Navigation -->
+    <VBox spacing="15" styleClass="sidebar-menu">
+        <Button text="User" styleClass="sidebar-button"/>
+        <Button text="Produits" styleClass="sidebar-button"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AjoutProduit" prefWidth="800" prefHeight="600">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header -->
+    <top>
+        <VBox alignment="CENTER" spacing="10" styleClass="header">
+            <Label text="Ajouter un Nouveau Produit" styleClass="title">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+            <Label text="Remplissez le formulaire ci-dessous pour ajouter un produit" styleClass="subtitle">
+                <font>
+                    <Font size="14"/>
+                </font>
+            </Label>
+            <padding>
+                <Insets bottom="20"/>
+            </padding>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <VBox spacing="20" style="-fx-padding: 0 100 0 100;">
+
+                <!-- Informations de base -->
+                <VBox spacing="15">
+                    <Label text="INFORMATIONS DE BASE" styleClass="section-header">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <!-- Nom du produit -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Nom du produit *" styleClass="form-label"/>
+                            <TextField fx:id="nomField" promptText="Ex: MacBook Pro 14&quot;" styleClass="custom-text-field"/>
+                        </VBox>
+
+                        <!-- Catégorie -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Catégorie *" styleClass="form-label"/>
+                            <ComboBox fx:id="categorieComboBox" promptText="Sélectionnez une catégorie" styleClass="custom-combo-box" maxWidth="Infinity"/>
+                        </VBox>
+
+                        <!-- Description -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                            <Label text="Description *" styleClass="form-label"/>
+                            <TextArea fx:id="descriptionField" promptText="Décrivez le produit en détail..." prefRowCount="4" wrapText="true" styleClass="custom-text-area"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Prix et Stock -->
+                <VBox spacing="15">
+                    <Label text="PRIX ET STOCK" styleClass="section-header">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <!-- Prix -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Prix (€) *" styleClass="form-label"/>
+                            <TextField fx:id="prixField" promptText="0.00" styleClass="custom-text-field"/>
+                        </VBox>
+
+                        <!-- Quantité -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Quantité en stock *" styleClass="form-label"/>
+                            <TextField fx:id="quantiteField" promptText="0" styleClass="custom-text-field"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Médias -->
+                <VBox spacing="15">
+                    <Label text="MÉDIAS" styleClass="section-header">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <!-- Image -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Image du produit" styleClass="form-label"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="imagePathField" promptText="Chemin de l'image..." editable="false" HBox.hgrow="ALWAYS" styleClass="custom-text-field"/>
+                                <Button text="Parcourir" onAction="#choisirImage" styleClass="secondary-button"/>
+                            </HBox>
+                            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="200" preserveRatio="true" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5;"/>
+                        </VBox>
+
+                        <!-- Modèle 3D -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Modèle 3D" styleClass="form-label"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="model3DField" promptText="Chemin du modèle 3D..." editable="false" HBox.hgrow="ALWAYS" styleClass="custom-text-field"/>
+                                <Button text="Parcourir" onAction="#choisirModel3D" styleClass="secondary-button"/>
+                            </HBox>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Footer with buttons -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding: 20 0 0 0;">
+            <Button text="Annuler" onAction="#annuler" prefWidth="120" styleClass="cancel-button"/>
+            <Button text="Réinitialiser" onAction="#reinitialiser" prefWidth="120" styleClass="secondary-button"/>
+            <Button fx:id="submitButton" text="Ajouter le produit" onAction="#ajouterProduit" prefWidth="180" defaultButton="true" styleClass="primary-button"/>
+        </HBox>
+    </bottom>
+
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
+</BorderPane>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.EditProduct"
+            prefHeight="700.0" prefWidth="1000.0"
+            styleClass="root-container"
+            stylesheets="/styles/styles.css">
+
+    <!-- Header -->
+    <VBox AnchorPane.topAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0"
+          spacing="15"
+          styleClass="header-container">
+        <padding>
+            <Insets top="20" right="30" bottom="20" left="30"/>
+        </padding>
+
+        <!-- Titre principal avec bouton retour -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Button fx:id="backButton" text="←" styleClass="back-button"/>
+            <Label text="Modifier le produit" styleClass="main-title">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+            </Label>
+        </HBox>
+
+        <!-- Subtitle avec ID du produit -->
+        <Label fx:id="productIdLabel" text="ID: #125" styleClass="product-id-label"/>
+    </VBox>
+
+    <!-- Contenu principal -->
+    <ScrollPane AnchorPane.topAnchor="120.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.bottomAnchor="80.0"
+                fitToWidth="true"
+                styleClass="content-scroll-pane">
+        <VBox spacing="30" styleClass="form-container">
+            <padding>
+                <Insets top="20" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <!-- Informations générales -->
+            <VBox spacing="20" styleClass="section-container">
+                <Label text="Informations générales" styleClass="section-title"/>
+
+                <HBox spacing="20">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Nom du produit *" styleClass="field-label"/>
+                        <TextField fx:id="nameField" promptText="Entrez le nom du produit" styleClass="form-field"/>
+                    </VBox>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Catégorie *" styleClass="field-label"/>
+                        <ComboBox fx:id="categoryComboBox" promptText="Sélectionnez une catégorie"
+                                  styleClass="form-field" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="8">
+                    <Label text="Description" styleClass="field-label"/>
+                    <TextArea fx:id="descriptionArea" promptText="Entrez une description du produit"
+                              prefHeight="100.0" wrapText="true" styleClass="form-field"/>
+                </VBox>
+            </VBox>
+
+            <!-- Prix et stock -->
+            <VBox spacing="20" styleClass="section-container">
+                <Label text="Prix et gestion du stock" styleClass="section-title"/>
+
+                <HBox spacing="20">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Prix (€) *" styleClass="field-label"/>
+                        <HBox styleClass="currency-field-container">
+                            <TextField fx:id="priceField" promptText="0.00" styleClass="form-field currency-field"/>
+                            <Label text="€" styleClass="currency-symbol"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Quantité en stock *" styleClass="field-label"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button fx:id="decrementButton" text="-" styleClass="quantity-button"/>
+                            <TextField fx:id="quantityField" text="0" styleClass="form-field quantity-field"/>
+                            <Button fx:id="incrementButton" text="+" styleClass="quantity-button"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Seuil d'alerte" styleClass="field-label"/>
+                        <TextField fx:id="thresholdField" promptText="10" styleClass="form-field"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="status-container">
+                    <Label text="Statut actuel:" styleClass="status-label"/>
+                    <Label fx:id="statusLabel" text="En stock" styleClass="status-value"/>
+                </HBox>
+            </VBox>
+
+            <!-- Attributs supplémentaires -->
+            <VBox spacing="20" styleClass="section-container">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Attributs supplémentaires" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="addAttributeButton" text="Ajouter un attribut" styleClass="action-button secondary small"/>
+                </HBox>
+
+                <VBox fx:id="attributesContainer" spacing="10">
+                    <HBox spacing="15" styleClass="attribute-row">
+                        <TextField promptText="Nom de l'attribut" styleClass="form-field attribute-name" HBox.hgrow="ALWAYS"/>
+                        <TextField promptText="Valeur" styleClass="form-field attribute-value" HBox.hgrow="ALWAYS"/>
+                        <Button text="X" styleClass="remove-button"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+
+    <!-- Footer -->
+    <HBox alignment="CENTER_RIGHT"
+          spacing="15"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0"
+          styleClass="footer-container">
+        <padding>
+            <Insets top="15" right="30" bottom="15" left="30"/>
+        </padding>
+
+        <Label fx:id="validationMessage" styleClass="validation-message" HBox.hgrow="ALWAYS"/>
+        <Button fx:id="cancelButton" text="Annuler" styleClass="action-button secondary"/>
+        <Button fx:id="saveButton" text="Enregistrer les modifications" styleClass="action-button primary"/>
+    </HBox>
+
+    <!-- Overlay chargement -->
+    <StackPane fx:id="loadingOverlay"
+               AnchorPane.topAnchor="0.0"
+               AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0"
+               AnchorPane.bottomAnchor="0.0"
+               visible="false"
+               styleClass="loading-overlay">
+        <VBox alignment="CENTER" spacing="10">
+            <ProgressIndicator/>
+            <Label text="Enregistrement en cours..." styleClass="loading-text"/>
+        </VBox>
+    </StackPane>
+
+    <!-- Notifications -->
+    <VBox fx:id="notificationArea"
+          AnchorPane.topAnchor="10.0"
+          AnchorPane.rightAnchor="10.0"
+          spacing="10"
+          styleClass="notification-area"/>
+</AnchorPane>
