@@ -1,0 +1,54 @@
+/* Dashboard Table Styling */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: #e3eaf2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, #1976d2, 2, 0.08, 0, 1);
+    -fx-padding: 8 8 8 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #1976d2, #63a4ff);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-size: 36px;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent transparent #e3eaf2 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #1565c0, 1, 0.2, 0, 1);
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #f9fbfd;
+    -fx-border-color: #e3eaf2;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell:filled:selected, .table-view .table-row-cell:focused:selected {
+    -fx-background-color: #e3f2fd;
+}
+
+.table-view .table-cell {
+    -fx-font-size: 14px;
+    -fx-padding: 6 8 6 8;
+    -fx-text-fill: #222;
+}
+
+/* Action Buttons in Table */
+.button {
+    -fx-cursor: hand;
+    -fx-background-radius: 15;
+    -fx-padding: 3 14 3 14;
+    -fx-font-size: 13px;
+}
+.button:hover {
+    -fx-opacity: 0.85;
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controller.LoginController" stylesheets="/tn/esprit/view/login.css">
+    <HBox fx:id="mainContainer" alignment="CENTER" prefWidth="768.0" prefHeight="480.0">
+        <!-- Left Panel: Forms -->
+        <StackPane fx:id="formStack" prefWidth="384.0" prefHeight="480.0">
+            <VBox fx:id="signInPane" alignment="CENTER" spacing="10" visible="true" styleClass="form-container">
+                <Label text="Se connecter" styleClass="form-title" />
+                <Label text="ou utilisez votre compte" />
+                <TextField fx:id="usernameField" promptText="Email" />
+                <PasswordField fx:id="passwordField" promptText="Mot de passe" />
+                <Hyperlink fx:id="forgotPasswordLink" text="Mot de passe oublié ?" styleClass="forgot" onAction="#handleForgotPassword" />
+                <Button text="Se connecter" onAction="#handleLogin" fx:id="signinBtn" />
+                <Label fx:id="messageLabel" textFill="red" styleClass="error-label"/>
+                <Button fx:id="showSignUpBtn" text="Créer un compte" styleClass="ghost" />
+            </VBox>
+            <VBox fx:id="signUpPane" alignment="CENTER" spacing="10" visible="false" styleClass="form-container">
+                <Label text="Créer un compte" styleClass="form-title" />
+                <Label text="ou utilisez votre email pour l'inscription" />
+                <TextField promptText="Nom" fx:id="signupNameField" />
+                <TextField promptText="Email" fx:id="signupEmailField" />
+                <PasswordField promptText="Mot de passe" fx:id="signupPasswordField" />
+                <PasswordField promptText="Confirmer le mot de passe" fx:id="signupConfirmPasswordField" />
+                <Label fx:id="signupMessageLabel" textFill="red" styleClass="error-label"/>
+                <Button text="S'inscrire" fx:id="signupBtn" onAction="#handleSignup" />
+                <Button fx:id="showSignInBtn" text="Se connecter" styleClass="ghost" />
+            </VBox>
+        </StackPane>
+        <!-- Right Panel: Overlay -->
+        <StackPane fx:id="overlayPane" prefWidth="384.0" prefHeight="480.0" styleClass="overlay-pane">
+            <VBox fx:id="overlayRight" alignment="CENTER" spacing="10" visible="true">
+                <Label text="Bonjour, ami !" styleClass="overlay-title" />
+                <Label text="Entrez vos informations personnelles et commencez votre parcours avec nous" wrapText="true" />
+                <Button text="Créer un Compte" fx:id="showSignUpBtnOverlay" styleClass="ghost" onAction="#showSignUpPanelTrue" />
+            </VBox>
+            <VBox fx:id="overlayLeft" alignment="CENTER" spacing="10" visible="false">
+                <Label text="Bienvenue !" styleClass="overlay-title" />
+                <Label text="Pour rester connecté avec nous, veuillez vous connecter avec vos informations personnelles" wrapText="true" />
+                <Button text="Se connecter" fx:id="showSignInBtnOverlay" styleClass="ghost" />
+            </VBox>
+        </StackPane>
+    </HBox>
+</StackPane>

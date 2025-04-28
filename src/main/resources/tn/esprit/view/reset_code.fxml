@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controller.ResetPasswordController" stylesheets="/tn/esprit/view/login.css">
+    <VBox alignment="CENTER" spacing="15" styleClass="form-container" prefWidth="350" prefHeight="300">
+        <Label text="Code de réinitialisation" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1976d2;" />
+        <Label text="Entrez le code reçu par email :" styleClass="form-title" />
+        <TextField fx:id="codeField" promptText="Code à 4 chiffres" />
+        <Button text="Vérifier le code" fx:id="verifyCodeBtn" onAction="#handleVerifyCode" />
+        <Label fx:id="codeMessageLabel" textFill="#d32f2f" styleClass="error-label" />
+        <VBox fx:id="resetFormPane" visible="false" spacing="10">
+            <Label text="Nouveau mot de passe" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1976d2;" />
+            <PasswordField fx:id="newPasswordField" promptText="Nouveau mot de passe" />
+            <PasswordField fx:id="confirmNewPasswordField" promptText="Confirmer le mot de passe" />
+            <Button text="Réinitialiser le mot de passe" fx:id="resetPasswordBtn" onAction="#handleResetPassword" />
+            <Label fx:id="resetMessageLabel" textFill="#388e3c" styleClass="error-label" />
+        </VBox>
+    </VBox>
+</StackPane>
