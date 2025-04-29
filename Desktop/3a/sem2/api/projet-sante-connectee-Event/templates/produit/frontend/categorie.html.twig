@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits de la catégorie : {{ categorie.name }}{% endblock %}
+
+{% block body %}
+    <section class="categorie-container">
+        <h1 class="categorie-title">Produits de la catégorie : <span>{{ categorie.name }}</span></h1>
+
+        <!-- Filter Section -->
+        <div class="filter-container">
+            <form method="get" action="{{ path('frontend_categorie', { id: categorie.id }) }}">
+                <input 
+                    type="text" 
+                    name="produit_search" 
+                    placeholder="Rechercher des produits..." 
+                    value="{{ app.request.query.get('produit_search') }}"
+                    class="search-input"
+                />
+                <button type="submit" class="search-button">Filtrer</button>
+            </form>
+        </div>
+
+        <div class="produits-list">
+            {% for produit in produits %}
+                <div class="produit-card">
+                    <a href="{{ path('frontend_produit', { id: produit.id }) }}" class="produit-link">
+                        <div class="produit-image">
+                            <img src="{{ asset(produit.image_path) }}" alt="{{ produit.nom }}">
+                        </div>
+                        <div class="produit-info">
+                            <h3>{{ produit.nom }}</h3>
+                            <p class="produit-description">{{ produit.description|slice(0, 100) }}...</p>
+                            <p class="produit-price">{{ produit.prix }}€</p>
+                        </div>
+                    </a>
+                </div>
+            {% else %}
+                <p>Aucun produit trouvé pour cette recherche.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+<style>
+/* base.css */
+
+.categorie-container {
+    padding: 2rem 5%;
+    text-align: center;
+    background-color: #f7f7f7;
+}
+
+.categorie-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.categorie-title span {
+    color: #007bff;
+    font-style: italic;
+}
+
+/* Filter Section */
+.filter-container {
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.produits-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.produit-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    height: 100%;
+}
+
+.produit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.produit-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.produit-image {
+    position: relative;
+    height: 200px;
+    background-color: #e9ecef;
+}
+
+.produit-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: opacity 0.4s ease;
+}
+
+.produit-card:hover .produit-image img {
+    opacity: 0.8;
+}
+
+.produit-info {
+    padding: 1rem;
+    text-align: left;
+}
+
+.produit-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0.5rem 0;
+    font-weight: 500;
+}
+
+.produit-description {
+    font-size: 1rem;
+    color: #777;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+}
+
+.produit-price {
+    font-size: 1.25rem;
+    color: #007bff;
+    font-weight: 700;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .categorie-title {
+        font-size: 2rem;
+    }
+    .produits-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .produits-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% endblock %}
