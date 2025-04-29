@@ -1638,3 +1638,174 @@
 .btn-retour:hover {
     -fx-background-color: #2980b9;
 }
+/* */
+.header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.btn-retour {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+}
+
+.btn-retour:hover {
+    -fx-background-color: #5a6268;
+}
+
+.btn-home {
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+}
+
+.btn-home:hover {
+    -fx-opacity: 0.8;
+}
+
+.image-placeholder {
+    -fx-background-color: #e9ecef;
+    -fx-background-radius: 10;
+}
+
+.initiales-grande {
+    -fx-font-size: 48px;
+    -fx-text-fill: #495057;
+}
+
+.categorie-label {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 14px;
+}
+
+.nom-produit {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.prix-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #28a745;
+}
+
+.stock-disponible {
+    -fx-text-fill: #28a745;
+    -fx-background-color: #d4edda;
+    -fx-background-radius: 15;
+    -fx-padding: 5 10;
+}
+
+.stock-indisponible {
+    -fx-text-fill: #dc3545;
+    -fx-background-color: #f8d7da;
+    -fx-background-radius: 15;
+    -fx-padding: 5 10;
+}
+
+.description-text {
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 0;
+}
+
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #545b62;
+}
+
+/* QR Code Section Styles */
+.qr-info-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+.qr-feature-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+}
+
+#qrCodeImageView {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-color: white;
+    -fx-padding: 10;
+}
+
+/* Product Card Styles */
+.produit-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+}
+
+.produit-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.image-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.initiales {
+    -fx-font-size: 24px;
+    -fx-text-fill: #6c757d;
+}
+
+.produit-nom {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+.produit-prix {
+    -fx-font-size: 14px;
+    -fx-text-fill: #28a745;
+    -fx-font-weight: bold;
+}
+
+.btn-details {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #495057;
+    -fx-background-radius: 4;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 4;
+    -fx-padding: 5 10;
+}
+
+.btn-details:hover {
+    -fx-background-color: #e9ecef;
+}

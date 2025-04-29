@@ -1,5 +1,8 @@
 package controllers;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,7 +70,14 @@ public class FrontCategorie {
     private TargetDataLine microphoneLine;
     private static final Logger LOGGER = Logger.getLogger(FrontCategorie.class.getName());
 
-    // Palette de couleurs pour les cartes de catégorie
+    // Chemin de base pour les images de catégories
+    private static final String IMAGE_BASE_PATH = "/images/categories/";
+
+    // Dimension des images
+    private static final double IMAGE_WIDTH = 180;
+    private static final double IMAGE_HEIGHT = 100;
+
+    // Palette de couleurs pour les cartes de catégorie (fallback)
     private final String[] colorPalette = {
             "#3498db", "#2ecc71", "#9b59b6", "#e74c3c", "#f39c12",
             "#1abc9c", "#d35400", "#16a085", "#8e44ad", "#c0392b"
@@ -169,6 +179,50 @@ public class FrontCategorie {
     }
 
     /**
+     * Tente de charger une image pour la catégorie
+     * @param category La catégorie pour laquelle charger une image
+     * @return Un ImageView contenant l'image ou null si l'image n'est pas trouvée
+     */
+    private ImageView loadCategoryImage(Category category) {
+        try {
+            // Essayer de charger l'image depuis le chemin spécifique à la catégorie
+            String imagePath = null;
+
+            // Si la catégorie a un chemin d'image spécifié
+            if (category.getimage_path() != null && !category.getimage_path().isEmpty()) {
+                imagePath = category.getimage_path();
+            } else {
+                // Sinon, essayer de trouver une image basée sur le nom de la catégorie
+                // Convertir le nom en un format de fichier valide (sans espaces, minuscules)
+                String fileName = category.getName().toLowerCase().replaceAll("\\s+", "_") + ".png";
+                imagePath = IMAGE_BASE_PATH + fileName;
+            }
+
+            // Tenter de charger l'image
+            InputStream inputStream = getClass().getResourceAsStream(imagePath);
+            if (inputStream == null) {
+                // Essayer une autre extension
+                imagePath = imagePath.replace(".png", ".jpg");
+                inputStream = getClass().getResourceAsStream(imagePath);
+            }
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(IMAGE_WIDTH);
+                imageView.setFitHeight(IMAGE_HEIGHT);
+                imageView.setPreserveRatio(true);
+                return imageView;
+            }
+
+            return null; // Image non trouvée
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Impossible de charger l'image pour la catégorie: " + category.getName(), e);
+            return null;
+        }
+    }
+
+    /**
      * Crée une carte visuelle pour représenter une catégorie
      */
     private VBox createCategoryCard(Category category) {
@@ -185,19 +239,33 @@ public class FrontCategorie {
         iconContainer.setPrefHeight(100);
         iconContainer.setPrefWidth(180);
 
-        String randomColor = colorPalette[random.nextInt(colorPalette.length)];
-        Rectangle rectangle = new Rectangle(180, 100);
-        rectangle.setFill(Color.web(randomColor));
-        rectangle.setArcWidth(15);
-        rectangle.setArcHeight(15);
+        // Essayer de charger l'image
+        ImageView categoryImage = loadCategoryImage(category);
 
-        String initialLetters = getInitials(category.getName());
-        Label initialsLabel = new Label(initialLetters);
-        initialsLabel.setFont(Font.font("System", FontWeight.BOLD, 36));
-        initialsLabel.setTextFill(Color.WHITE);
-        initialsLabel.setTextAlignment(TextAlignment.CENTER);
+        if (categoryImage != null) {
+            // Ajouter un effet de bord arrondi à l'image
+            Rectangle clip = new Rectangle(180, 100);
+            clip.setArcWidth(15);
+            clip.setArcHeight(15);
+            categoryImage.setClip(clip);
 
-        iconContainer.getChildren().addAll(rectangle, initialsLabel);
+            iconContainer.getChildren().add(categoryImage);
+        } else {
+            // Fallback au système d'initiales si aucune image n'est disponible
+            String randomColor = colorPalette[random.nextInt(colorPalette.length)];
+            Rectangle rectangle = new Rectangle(180, 100);
+            rectangle.setFill(Color.web(randomColor));
+            rectangle.setArcWidth(15);
+            rectangle.setArcHeight(15);
+
+            String initialLetters = getInitials(category.getName());
+            Label initialsLabel = new Label(initialLetters);
+            initialsLabel.setFont(Font.font("System", FontWeight.BOLD, 36));
+            initialsLabel.setTextFill(Color.WHITE);
+            initialsLabel.setTextAlignment(TextAlignment.CENTER);
+
+            iconContainer.getChildren().addAll(rectangle, initialsLabel);
+        }
 
         Label nameLabel = new Label(category.getName());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
@@ -290,12 +358,27 @@ public class FrontCategorie {
             return;
         }
 
-        List<Category> filteredList = categorieService.getAll().stream()
-                .filter(category -> category.getName().toLowerCase().contains(searchText.toLowerCase()))
-                .toList();
+        try {
+            List<Category> filteredList = categorieService.getAll().stream()
+                    .filter(category -> category.getName().toLowerCase().contains(searchText.toLowerCase()))
+                    .toList();
 
-        // Update the table with filtered results
-        // categoriesTable.setItems(FXCollections.observableArrayList(filteredList));
+            categoriesContainer.getChildren().clear();
+
+            if (filteredList.isEmpty()) {
+                Label noResultsLabel = new Label("Aucune catégorie trouvée pour: " + searchText);
+                noResultsLabel.setStyle("-fx-text-fill: #555; -fx-font-size: 14px;");
+                categoriesContainer.getChildren().add(noResultsLabel);
+            } else {
+                for (Category category : filteredList) {
+                    VBox categoryCard = createCategoryCard(category);
+                    categoriesContainer.getChildren().add(categoryCard);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors du filtrage des catégories", e);
+            showError("Impossible de filtrer les catégories");
+        }
     }
 
     @FXML

@@ -4,6 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontProduit">
     <children>
@@ -35,14 +39,10 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="searchField" prefWidth="200.0" promptText="Rechercher..." />
                         <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #3498db;" text="Rechercher" textFill="WHITE" />
+                        <Button fx:id="voiceSearchButton" text="🎤" onAction="#handleVoiceSearch" styleClass="voice-button"/>
                     </children>
                 </HBox>
-                <!-- Add these elements near your existing search field -->
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="searchField" promptText="Rechercher un produit..." prefWidth="200" />
-                    <Button fx:id="voiceSearchButton" text="🎤" onAction="#handleVoiceSearch" styleClass="voice-button"/>
-                    <Button fx:id="searchButton" text="Rechercher" onAction="#handleSearch" />
-                </HBox>
+
                 <Label fx:id="lblResultInfo" text="Affichage de tous les produits" textFill="#555555">
                     <font>
                         <Font size="14.0" />
@@ -57,6 +57,9 @@
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                             </padding>
+
+                            <!-- Note: Les produits seront générés dynamiquement par le contrôleur
+                                 en utilisant le chemin d'accès général: @../images/produits/[nom_produit].jpg -->
                         </FlowPane>
                     </content>
                 </ScrollPane>
@@ -88,16 +91,18 @@
                 </HBox>
             </children>
         </VBox>
+
+        <!-- Overlay pour la reconnaissance vocale -->
+        <StackPane fx:id="voiceRecognitionOverlay" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);"
+                   alignment="CENTER" managed="${voiceRecognitionOverlay.visible}" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox alignment="CENTER" spacing="15">
+                <Label text="Écoute en cours..." textFill="WHITE" style="-fx-font-size: 18px;"/>
+                <ProgressIndicator />
+                <Label fx:id="voicePromptLabel" textFill="WHITE" style="-fx-font-size: 14px;"
+                       text="Dites le nom du produit à rechercher..."/>
+                <Button text="Annuler" onAction="#cancelVoiceRecognition" />
+            </VBox>
+        </StackPane>
     </children>
-    <!-- Add this somewhere at the end of the file before the closing tag -->
-    <StackPane fx:id="voiceRecognitionOverlay" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);"
-               alignment="CENTER" managed="${voiceRecognitionOverlay.visible}">
-        <VBox alignment="CENTER" spacing="15">
-            <Label text="Écoute en cours..." textFill="WHITE" style="-fx-font-size: 18px;"/>
-            <ProgressIndicator />
-            <Label fx:id="voicePromptLabel" textFill="WHITE" style="-fx-font-size: 14px;"
-                   text="Dites le nom du produit à rechercher..."/>
-            <Button text="Annuler" onAction="#cancelVoiceRecognition" />
-        </VBox>
-    </StackPane>
 </AnchorPane>

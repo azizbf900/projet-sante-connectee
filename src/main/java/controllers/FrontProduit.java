@@ -321,7 +321,8 @@ public class FrontProduit {
                             p.getDescription().toLowerCase().contains(searchTerm))
                     .collect(Collectors.toList());
 
-            lblResultInfo.setText("Résultats de recherche pour \"" + searchTerm + "\" (" + searchResults.size() + ")");
+            lblResultInfo.setText("Résultats de recherche pour \"" + searchTerm + "\" (" + searchResults.size() + " produit(s) trouvé(s))");
+            lblHeaderTitle.setText("Recherche Globale");
         }
 
         displayProduits(searchResults);
