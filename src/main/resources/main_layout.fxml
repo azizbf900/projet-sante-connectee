@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.MainLayoutController"
+      prefHeight="800.0" prefWidth="1200.0"
+      styleClass="main-container"
+      stylesheets="/styles/styles.css">
+
+    <!-- Sidebar directement intégrée (au lieu d'utiliser fx:include) -->
+    <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250" spacing="10">
+        <padding>
+            <Insets top="20" right="10" bottom="20" left="10" />
+        </padding>
+
+        <!-- Logo ou titre -->
+        <StackPane styleClass="logo-container">
+            <Text styleClass="app-title" text="VitaLink" />
+        </StackPane>
+
+        <!-- Navigation items -->
+        <HBox fx:id="btnDashboard" styleClass="nav-button">
+            <Label text="Dashboard" />
+        </HBox>
+
+        <HBox fx:id="btnUsers" styleClass="nav-button">
+            <Label text="Utilisateurs" />
+        </HBox>
+
+        <HBox fx:id="btnRendezVous" styleClass="nav-button">
+            <Label text="Rendez-vous" />
+        </HBox>
+
+        <HBox fx:id="btnProduits" styleClass="nav-button">
+            <Label text="Produits" />
+        </HBox>
+
+        <HBox fx:id="btnEvents" styleClass="nav-button">
+            <Label text="Événements" />
+        </HBox>
+
+        <HBox fx:id="btnBlogs" styleClass="nav-button">
+            <Label text="Blogs" />
+        </HBox>
+
+        <VBox VBox.vgrow="ALWAYS" />
+
+        <HBox fx:id="btnSettings" styleClass="nav-button">
+            <Label text="Paramètres" />
+        </HBox>
+
+        <HBox fx:id="btnLogout" styleClass="nav-button, logout-button">
+            <Label text="Déconnexion" />
+        </HBox>
+    </VBox>
+
+    <!-- Conteneur de contenu principal -->
+    <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+        <!-- Le contenu spécifique sera chargé dynamiquement ici -->
+    </StackPane>
+
+</HBox>

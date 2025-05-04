@@ -1,17 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
-<VBox prefWidth="200" spacing="20" styleClass="sidebar" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml">
-    <!-- Logo -->
-    <VBox alignment="CENTER" spacing="10" styleClass="sidebar-logo">
-        <Label text="VitaLink" styleClass="sidebar-title"/>
+<VBox id="sidebar" styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.SidebarController">
+
+    <!-- Logo and App Name -->
+    <HBox styleClass="logo-container" alignment="CENTER_LEFT" spacing="10">
+        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+            <Image url="@../images/logo.png" />
+        </ImageView>
+        <Label text="SanaConnect" styleClass="app-name" />
+        <HBox HBox.hgrow="ALWAYS" />
+        <Button styleClass="menu-button">
+            <graphic>
+                <FontAwesomeIconView glyphName="BARS" size="20" />
+            </graphic>
+        </Button>
+        <padding>
+            <Insets top="15" right="15" bottom="15" left="15" />
+        </padding>
+    </HBox>
+
+    <!-- User Profile -->
+    <VBox styleClass="user-profile" alignment="CENTER">
+        <ImageView styleClass="user-avatar" fitHeight="70" fitWidth="70" preserveRatio="true">
+            <Image url="@../images/doctor.png" />
+        </ImageView>
+        <Label text="Sarah Smith" styleClass="user-name" />
+        <Label text="Admin" styleClass="user-role" />
     </VBox>
 
-    <!-- Navigation -->
-    <VBox spacing="15" styleClass="sidebar-menu">
-        <Button text="User" styleClass="sidebar-button"/>
-        <Button text="Produits" styleClass="sidebar-button"/>
+    <!-- Menu Section Title -->
+    <Label text="MAIN" styleClass="menu-section" />
+
+    <!-- Navigation Menu -->
+    <VBox styleClass="menu-items">
+        <!-- Dashboard Menu -->
+        <VBox>
+            <HBox fx:id="btnDashboard" styleClass="menu-item, active" alignment="CENTER_LEFT">
+                <FontAwesomeIconView glyphName="DASHBOARD" size="16" styleClass="menu-icon"/>
+                <Label text="Dashboard" styleClass="menu-text" />
+                <HBox HBox.hgrow="ALWAYS" />
+                <FontAwesomeIconView glyphName="MINUS" size="12" styleClass="menu-collapse-icon"/>
+            </HBox>
+
+            <!-- Dashboard Submenu -->
+            <VBox styleClass="submenu">
+                <HBox styleClass="submenu-item" alignment="CENTER_LEFT">
+                    <FontAwesomeIconView glyphName="ANGLE_RIGHT" size="12" styleClass="submenu-icon"/>
+                    <Label text="Admin Dashboard" styleClass="submenu-text" />
+                </HBox>
+                <HBox styleClass="submenu-item" alignment="CENTER_LEFT">
+                    <FontAwesomeIconView glyphName="ANGLE_RIGHT" size="12" styleClass="submenu-icon"/>
+                    <Label text="Analytics" styleClass="submenu-text" />
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- User Management -->
+        <HBox fx:id="btnUsers" styleClass="menu-item" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="USERS" size="16" styleClass="menu-icon"/>
+            <Label text="Utilisateurs" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+            <Button styleClass="add-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="12" />
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Rendez-vous -->
+        <HBox fx:id="btnRendezVous" styleClass="menu-item" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CALENDAR" size="16" styleClass="menu-icon"/>
+            <Label text="Rendez-vous" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+            <Button styleClass="add-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="12" />
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Produits -->
+        <HBox fx:id="btnProduits" styleClass="menu-item" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="SHOPPING_CART" size="16" styleClass="menu-icon"/>
+            <Label text="Produits" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+            <Button styleClass="add-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="12" />
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Events -->
+        <HBox fx:id="btnEvents" styleClass="menu-item" alignment="CENTER_LEFT">
+            <Label text="Événements" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+            <Button styleClass="add-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="12" />
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Blogs -->
+        <HBox fx:id="btnBlogs" styleClass="menu-item" alignment="CENTER_LEFT">
+            <Label text="Blogs" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+            <Button styleClass="add-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="12" />
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Settings -->
+        <HBox fx:id="btnSettings" styleClass="menu-item" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="COG" size="16" styleClass="menu-icon"/>
+            <Label text="Paramètres" styleClass="menu-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Logout -->
+        <HBox fx:id="btnLogout" styleClass="menu-item, logout-item" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="SIGN_OUT" size="16" styleClass="menu-icon, logout-icon"/>
+            <Label text="Déconnexion" styleClass="menu-text, logout-text" />
+            <HBox HBox.hgrow="ALWAYS" />
+        </HBox>
     </VBox>
 </VBox>
