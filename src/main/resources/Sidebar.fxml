@@ -12,7 +12,7 @@
     <!-- Logo and App Name -->
     <HBox styleClass="logo-container" alignment="CENTER_LEFT" spacing="10">
         <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
-            <Image url="@../images/logo.png" />
+            <Image url="/images/logo.png" />
         </ImageView>
         <Label text="SanaConnect" styleClass="app-name" />
         <HBox HBox.hgrow="ALWAYS" />
@@ -29,7 +29,7 @@
     <!-- User Profile -->
     <VBox styleClass="user-profile" alignment="CENTER">
         <ImageView styleClass="user-avatar" fitHeight="70" fitWidth="70" preserveRatio="true">
-            <Image url="@../images/doctor.png" />
+            <Image url="/images/comment/comment_1.png" />
         </ImageView>
         <Label text="Sarah Smith" styleClass="user-name" />
         <Label text="Admin" styleClass="user-role" />
