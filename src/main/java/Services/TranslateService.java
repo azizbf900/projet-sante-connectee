@@ -1,65 +1,42 @@
 package Services;
 
-import javafx.scene.control.Alert;
-import org.json.JSONObject;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import org.json.JSONObject;
 
 public class TranslateService {
 
-    private static final String TRANSLATION_API_URL = "https://libretranslate.de/translate"; // ✅ URL plus fiable
-
-    public static String translateText(String text, String sourceLang, String targetLang) {
+    public static String translateText(String textToTranslate) {
         try {
-            URL url = new URL(TRANSLATION_API_URL);
+            String encodedText = URLEncoder.encode(textToTranslate, "UTF-8");
+
+            // On ajoute un email fictif pour que la requête soit acceptée
+            String urlStr = "https://api.mymemory.translated.net/get?q=" +
+                    encodedText + "&langpair=fr|en&de=vitalink.project@example.com";
+
+            URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setDoOutput(true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder responseContent = new StringBuilder();
+            String line;
 
-            // Construire le body JSON
-            JSONObject data = new JSONObject();
-            data.put("q", text);
-            data.put("source", sourceLang);
-            data.put("target", targetLang);
-            data.put("format", "text");
-
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = data.toString().getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
+            while ((line = reader.readLine()) != null) {
+                responseContent.append(line);
             }
+            reader.close();
 
-            // Lire la réponse
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-            }
+            // Analyse du JSON
+            JSONObject json = new JSONObject(responseContent.toString());
+            return json.getJSONObject("responseData").getString("translatedText");
 
-            JSONObject jsonResponse = new JSONObject(response.toString());
-            return jsonResponse.getString("translatedText");
-
-        } catch (IOException e) {
-            showError("Erreur de connexion au serveur de traduction.\nVérifiez votre connexion internet ou essayez plus tard.");
-            e.printStackTrace();
         } catch (Exception e) {
-            showError("Erreur inattendue pendant la traduction.");
-            e.printStackTrace();
+            System.err.println("❌ Erreur de traduction : " + e.getMessage());
+            return "Erreur de traduction";
         }
-        return null;
-    }
-
-    private static void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erreur");
-        alert.setHeaderText("Erreur de Traduction");
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

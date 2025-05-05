@@ -1,5 +1,8 @@
 package controllers;
 
+import Services.ServiceCommentaire;
+import Services.ServicePosts;
+import Services.TranslateService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,14 +16,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Commentaire;
 import models.Posts;
-import Services.ServiceCommentaire;
-import Services.ServicePosts;
+import Services.OpenAIModerationService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
-import Services.TranslateService;
 
 public class PostCardController {
 
@@ -52,7 +53,6 @@ public class PostCardController {
     private Label dislikeCountLabel;
 
     private Posts post;
-
     private final ServiceCommentaire serviceCommentaire = new ServiceCommentaire();
     private final ServicePosts servicePosts = new ServicePosts();
 
@@ -137,12 +137,35 @@ public class PostCardController {
 
         String text = commentInput.getText().trim();
         if (!text.isEmpty()) {
+            try {
+                boolean acceptable = OpenAIModerationService.isCommentAcceptable(text);
+
+                if (!acceptable) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Commentaire bloqué");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ce commentaire a été bloqué pour contenu inapproprié.");
+                    alert.showAndWait();
+                    return;
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ Erreur API OpenAI : " + e.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur de modération");
+                alert.setHeaderText(null);
+                alert.setContentText("Le système de modération est temporairement indisponible.");
+                alert.showAndWait();
+                return;
+            }
+
             Commentaire nouveau = new Commentaire(post.getId(), text, LocalDate.now());
             serviceCommentaire.ajouter(nouveau);
             commentInput.clear();
             loadComments();
         }
     }
+
 
     @FXML
     private void handleLike() {
@@ -162,13 +185,12 @@ public class PostCardController {
         }
     }
 
-
     @FXML
     private void handleTranslate() {
-        if (post != null) {
-            String texteOriginal = postContent.getText();
-            String texteTraduit = TranslateService.translateText(texteOriginal, "fr", "en");
-            postContent.setText(texteTraduit);
+        if (postContent != null && !postContent.getText().isEmpty()) {
+            String originalText = postContent.getText();
+            String translated = TranslateService.translateText(originalText);
+            postContent.setText(translated);
         }
     }
 
