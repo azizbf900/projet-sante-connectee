@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Commentaire;
 import models.Posts;
-import Services.OpenAIModerationService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,28 +136,6 @@ public class PostCardController {
 
         String text = commentInput.getText().trim();
         if (!text.isEmpty()) {
-            try {
-                boolean acceptable = OpenAIModerationService.isCommentAcceptable(text);
-
-                if (!acceptable) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Commentaire bloqué");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Ce commentaire a été bloqué pour contenu inapproprié.");
-                    alert.showAndWait();
-                    return;
-                }
-
-            } catch (Exception e) {
-                System.err.println("❌ Erreur API OpenAI : " + e.getMessage());
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur de modération");
-                alert.setHeaderText(null);
-                alert.setContentText("Le système de modération est temporairement indisponible.");
-                alert.showAndWait();
-                return;
-            }
-
             Commentaire nouveau = new Commentaire(post.getId(), text, LocalDate.now());
             serviceCommentaire.ajouter(nouveau);
             commentInput.clear();
