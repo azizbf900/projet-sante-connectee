@@ -13,7 +13,7 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Charger le layout principal
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/main_layout.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/front/categorie.fxml")));
 
         // Configurer la scène
         Scene scene = new Scene(root, 1200, 800);

@@ -9,100 +9,94 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ProgressIndicator?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontProduit">
-    <children>
-        <VBox alignment="TOP_CENTER" layoutX="0.0" layoutY="0.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <HBox alignment="CENTER" style="-fx-background-color: #3498db;">
-                    <children>
-                        <Label fx:id="lblHeaderTitle" text="Produits Médicaux" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="24.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                            </padding>
-                        </Label>
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f8f9fa;">
-                    <padding>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                    </padding>
-                    <children>
-                        <Label text="Filtrer par:" textFill="#555555">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <ComboBox fx:id="categorieComboBox" prefWidth="200.0" promptText="Toutes les catégories" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="searchField" prefWidth="200.0" promptText="Rechercher..." />
-                        <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #3498db;" text="Rechercher" textFill="WHITE" />
-                        <Button fx:id="voiceSearchButton" text="🎤" onAction="#handleVoiceSearch" styleClass="voice-button"/>
-                    </children>
-                </HBox>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontProduit">
+    <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER" style="-fx-background-color: #3498db;">
+            <Label fx:id="lblHeaderTitle" text="Produits Médicaux" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+                <padding>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                </padding>
+            </Label>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f8f9fa;">
+            <padding>
+                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+            </padding>
+            <Label text="Filtrer par:" textFill="#555555">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+            <ComboBox fx:id="categorieComboBox" prefWidth="200.0" promptText="Toutes les catégories"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" prefWidth="200.0" promptText="Rechercher..."/>
+            <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#handleSearch"
+                    style="-fx-background-color: #3498db;" text="Rechercher" textFill="WHITE"/>
+            <Button fx:id="voiceSearchButton" text="🎤" onAction="#handleVoiceSearch" styleClass="voice-button"/>
+        </HBox>
 
-                <Label fx:id="lblResultInfo" text="Affichage de tous les produits" textFill="#555555">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                    </VBox.margin>
-                </Label>
-                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                    <content>
-                        <FlowPane fx:id="produitsContainer" hgap="20" vgap="20" alignment="CENTER">
-                            <padding>
-                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                            </padding>
+        <Label fx:id="lblResultInfo" text="Affichage de tous les produits" textFill="#555555">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+            </VBox.margin>
+        </Label>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+            <FlowPane fx:id="produitsContainer" hgap="20" vgap="20" alignment="CENTER">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                </padding>
 
-                            <!-- Note: Les produits seront générés dynamiquement par le contrôleur
+                <!-- Note: Les produits seront générés dynamiquement par le contrôleur
                                  en utilisant le chemin d'accès général: @../images/produits/[nom_produit].jpg -->
-                        </FlowPane>
-                    </content>
-                </ScrollPane>
-                <HBox alignment="CENTER" spacing="20" style="-fx-background-color: #f8f9fa;">
-                    <children>
-                        <Button fx:id="btnRetourCategories" mnemonicParsing="false" onAction="#handleRetourCategories" style="-fx-background-color: #3498db;" text="Retour aux catégories" textFill="WHITE">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                            </padding>
-                            <HBox.margin>
-                                <Insets bottom="15.0" top="15.0" />
-                            </HBox.margin>
-                        </Button>
-                        <Button fx:id="btnAccueil" mnemonicParsing="false" onAction="#handleRetourAccueil" style="-fx-background-color: #2ecc71;" text="Accueil" textFill="WHITE">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                            </padding>
-                            <HBox.margin>
-                                <Insets bottom="15.0" top="15.0" />
-                            </HBox.margin>
-                        </Button>
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
+            </FlowPane>
+        </ScrollPane>
+        <HBox alignment="CENTER" spacing="20" style="-fx-background-color: #f8f9fa;">
+            <Button fx:id="btnRetourCategories" mnemonicParsing="false" onAction="#handleRetourCategories"
+                    style="-fx-background-color: #3498db;" text="Retour aux catégories" textFill="WHITE">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+                <padding>
+                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                </padding>
+                <HBox.margin>
+                    <Insets bottom="15.0" top="15.0"/>
+                </HBox.margin>
+            </Button>
+            <Button fx:id="btnAccueil" mnemonicParsing="false" onAction="#handleRetourAccueil"
+                    style="-fx-background-color: #2ecc71;" text="Accueil" textFill="WHITE">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+                <padding>
+                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                </padding>
+                <HBox.margin>
+                    <Insets bottom="15.0" top="15.0"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </VBox>
 
-        <!-- Overlay pour la reconnaissance vocale -->
-        <StackPane fx:id="voiceRecognitionOverlay" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);"
-                   alignment="CENTER" managed="${voiceRecognitionOverlay.visible}" AnchorPane.bottomAnchor="0.0"
-                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <VBox alignment="CENTER" spacing="15">
-                <Label text="Écoute en cours..." textFill="WHITE" style="-fx-font-size: 18px;"/>
-                <ProgressIndicator />
-                <Label fx:id="voicePromptLabel" textFill="WHITE" style="-fx-font-size: 14px;"
-                       text="Dites le nom du produit à rechercher..."/>
-                <Button text="Annuler" onAction="#cancelVoiceRecognition" />
-            </VBox>
-        </StackPane>
-    </children>
+    <!-- Overlay pour la reconnaissance vocale -->
+    <StackPane fx:id="voiceRecognitionOverlay" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);"
+               managed="${voiceRecognitionOverlay.visible}" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="CENTER" spacing="15">
+            <Label text="Écoute en cours..." textFill="WHITE" style="-fx-font-size: 18px;"/>
+            <ProgressIndicator/>
+            <Label fx:id="voicePromptLabel" textFill="WHITE" style="-fx-font-size: 14px;"
+                   text="Dites le nom du produit à rechercher..."/>
+            <Button text="Annuler" onAction="#cancelVoiceRecognition"/>
+        </VBox>
+    </StackPane>
 </AnchorPane>

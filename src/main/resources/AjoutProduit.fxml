@@ -144,8 +144,4 @@
             <Button fx:id="submitButton" text="Ajouter le produit" onAction="#ajouterProduit" prefWidth="180" defaultButton="true" styleClass="primary-button"/>
         </HBox>
     </bottom>
-
-    <stylesheets>
-        <URL value="@/styles/styles.css"/>
-    </stylesheets>
 </BorderPane>

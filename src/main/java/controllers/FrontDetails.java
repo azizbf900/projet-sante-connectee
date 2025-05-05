@@ -9,12 +9,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Category;
@@ -25,10 +30,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class FrontDetails implements Initializable {
 
@@ -45,6 +53,7 @@ public class FrontDetails implements Initializable {
     @FXML private Button btnView3D;
     @FXML private Button btnSaveQR;
     @FXML private HBox produitsSimilairesBox;
+    @FXML private StackPane productImageContainer;
 
     private Produit produit;
     private ProduitService produitService;
@@ -53,10 +62,29 @@ public class FrontDetails implements Initializable {
     private WritableImage qrCodeImage;
     private final DecimalFormat df = new DecimalFormat("0.00");
 
+    // Constants for image handling
+    private static final String IMAGE_BASE_PATH = "/images/produits/";
+    private static final double IMAGE_WIDTH = 300;
+    private static final double IMAGE_HEIGHT = 200;
+
+    private final String[] colorPalette = {
+            "#3498db", "#2ecc71", "#9b59b6", "#e74c3c", "#f39c12",
+            "#1abc9c", "#d35400", "#16a085", "#8e44ad", "#c0392b"
+    };
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         produitService = ProduitService.getInstance();
         categorieService = new CategorieService();
+
+        // Initialize productImageContainer if it's null
+        if (productImageContainer == null) {
+            productImageContainer = new StackPane();
+            productImageContainer.setPrefHeight(IMAGE_HEIGHT);
+            productImageContainer.setPrefWidth(IMAGE_WIDTH);
+            productImageContainer.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+            productImageContainer.setPadding(new Insets(10));
+        }
     }
 
     public void setProduitId(int id) {
@@ -74,7 +102,81 @@ public class FrontDetails implements Initializable {
         }
     }
 
+    private ImageView loadProductImage(Produit produit) {
+        String imagePath = null;
+        InputStream inputStream = null;
+
+        // 1. Chemin personnalisé
+        if (produit.getimage_path() != null && !produit.getimage_path().isEmpty()) {
+            imagePath = produit.getimage_path();
+            inputStream = getClass().getResourceAsStream(imagePath);
+        }
+
+        // 2. Nom automatique
+        if (inputStream == null) {
+            String fileName = produit.getNom().toLowerCase().replaceAll("\\s+", "_");
+            imagePath = "/images/produits/" + fileName + ".jpg";
+            inputStream = getClass().getResourceAsStream(imagePath);
+            if (inputStream == null) {
+                imagePath = "/images/produits/" + fileName + ".png";
+                inputStream = getClass().getResourceAsStream(imagePath);
+            }
+        }
+
+        // 3. Fallback image 1.png
+        if (inputStream == null) {
+            imagePath = "/images/produits/1.png";
+            inputStream = getClass().getResourceAsStream(imagePath);
+        }
+
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setPreserveRatio(true);
+            return imageView;
+        }
+        return null;
+    }
+
     private void afficherDetailsProduit() {
+        // Ensure productImageContainer is initialized
+        if (productImageContainer == null) {
+            productImageContainer = new StackPane();
+            productImageContainer.setPrefHeight(IMAGE_HEIGHT);
+            productImageContainer.setPrefWidth(IMAGE_WIDTH);
+            productImageContainer.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+            productImageContainer.setPadding(new Insets(10));
+        }
+
+        // Load and display product image
+        ImageView productImage = loadProductImage(produit);
+        productImageContainer.getChildren().clear();
+
+        if (productImage != null) {
+            // Add rounded corner effect to image
+            Rectangle clip = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            clip.setArcWidth(15);
+            clip.setArcHeight(15);
+            productImage.setClip(clip);
+            productImageContainer.getChildren().add(productImage);
+        } else {
+            // Fallback to initials system if no image is available
+            String randomColor = colorPalette[Math.abs(produit.getNom().hashCode()) % colorPalette.length];
+            Rectangle rectangle = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            rectangle.setFill(Color.web(randomColor));
+            rectangle.setArcWidth(15);
+            rectangle.setArcHeight(15);
+
+            Label initialsLabel = new Label(getInitiales(produit.getNom()));
+            initialsLabel.setFont(Font.font("System", FontWeight.BOLD, 48));
+            initialsLabel.setTextFill(Color.WHITE);
+            initialsLabel.setTextAlignment(TextAlignment.CENTER);
+
+            productImageContainer.getChildren().addAll(rectangle, initialsLabel);
+        }
+
         // Informations de base
         nomLabel.setText(produit.getNom());
         prixLabel.setText(df.format(produit.getPrix()) + " €");
@@ -124,42 +226,11 @@ public class FrontDetails implements Initializable {
     }
 
     private void generateQRCode() {
-        try {
-            String qrContent = String.format("Produit Medical:%n" +
-                            "Nom: %s%n" +
-                            "Prix: %.2f €%n" +
-                            "Description: %s%n" +
-                            "Catégorie: %s%n" +
-                            "ID: %d%n" +
-                            "Stock: %d unités%n" +
-                            "Caractéristiques: %s%n" +
-                            "Utilisation: %s",
-                    produit.getNom(),
-                    produit.getPrix(),
-                    produit.getDescription().split("\\|")[0],
-                    categorieService.getById(produit.getCategorie()).getName(),
-                    produit.getId(),
-                    produit.getQuantite(),
-                    caracteristiquesLabel.getText(),
-                    utilisationLabel.getText());
-
-            // Create a simple QR code pattern
-            WritableImage qrImage = new WritableImage(200, 200);
-
-            // Generate a simple pattern
-            for (int x = 0; x < 200; x++) {
-                for (int y = 0; y < 200; y++) {
-                    // Simple pattern based on position and content hash
-                    boolean isBlack = ((x + y + qrContent.hashCode()) % 3 == 0);
-                    qrImage.getPixelWriter().setColor(x, y, isBlack ? Color.BLACK : Color.WHITE);
-                }
-            }
-
-            qrCodeImage = qrImage;
-            qrCodeImageView.setImage(qrCodeImage);
-
-        } catch (Exception e) {
-            afficherErreur("Erreur QR Code", "Impossible de générer le QR code: " + e.getMessage());
+        // Afficher l'image 1.png à la place du QR code
+        InputStream inputStream = getClass().getResourceAsStream("/images/produits/1.png");
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            qrCodeImageView.setImage(image);
         }
     }
 
@@ -183,15 +254,34 @@ public class FrontDetails implements Initializable {
         card.setSpacing(5);
         card.setPadding(new Insets(10));
 
-        AnchorPane imageContainer = new AnchorPane();
+        StackPane imageContainer = new StackPane();
         imageContainer.setPrefHeight(80);
         imageContainer.getStyleClass().add("image-container");
 
-        Label initiales = new Label(getInitiales(p.getNom()));
-        initiales.getStyleClass().add("initiales");
-        imageContainer.getChildren().add(initiales);
-        AnchorPane.setTopAnchor(initiales, 25.0);
-        AnchorPane.setLeftAnchor(initiales, 90.0);
+        // Try to load product image
+        ImageView productImage = loadProductImage(p);
+        if (productImage != null) {
+            // Add rounded corner effect to image
+            Rectangle clip = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            clip.setArcWidth(10);
+            clip.setArcHeight(10);
+            productImage.setClip(clip);
+            imageContainer.getChildren().add(productImage);
+        } else {
+            // Fallback to initials
+            String randomColor = colorPalette[Math.abs(p.getNom().hashCode()) % colorPalette.length];
+            Rectangle rectangle = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            rectangle.setFill(Color.web(randomColor));
+            rectangle.setArcWidth(10);
+            rectangle.setArcHeight(10);
+
+            Label initiales = new Label(getInitiales(p.getNom()));
+            initiales.setFont(Font.font("System", FontWeight.BOLD, 24));
+            initiales.setTextFill(Color.WHITE);
+            initiales.setTextAlignment(TextAlignment.CENTER);
+
+            imageContainer.getChildren().addAll(rectangle, initiales);
+        }
 
         Label nom = new Label(p.getNom());
         nom.getStyleClass().add("produit-nom");
@@ -303,7 +393,7 @@ public class FrontDetails implements Initializable {
     @FXML
     private void allerAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/front/accueil.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/front/accueil.fxml")));
             Scene scene = btnAddToCart.getScene();
             scene.setRoot(root);
         } catch (IOException e) {

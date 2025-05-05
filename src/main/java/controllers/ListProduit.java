@@ -321,7 +321,7 @@ public class ListProduit implements Initializable {
     private void navigateToAddProduct() {
         try {
             // Charger le fichier FXML de la page d'ajout
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ajoutproduit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutProduit.fxml"));
             Parent root = loader.load();
 
             // Créer une nouvelle scène avec la page d'ajout

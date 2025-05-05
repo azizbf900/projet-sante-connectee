@@ -20,15 +20,17 @@ import models.Category;
 import models.Produit;
 import services.CategorieService;
 import services.ProduitService;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javax.sound.sampled.*;
 import java.io.*;
 import java.util.concurrent.ExecutorService;
@@ -69,9 +71,6 @@ public class FrontProduit {
     @FXML
     private Label voicePromptLabel;
 
-    @FXML
-    private TableView<Produit> produitsTable; // Assuming you have this
-
     private ProduitService produitService;
     private ExecutorService executorService;
     private boolean isRecording = false;
@@ -79,6 +78,11 @@ public class FrontProduit {
     private CategorieService categorieService;
     private List<Produit> allProduits;
     private Integer selectedCategoryId = null;
+
+    // Constants for image handling
+    private static final String IMAGE_BASE_PATH = "/images/produits/";
+    private static final double IMAGE_WIDTH = 180;
+    private static final double IMAGE_HEIGHT = 120;
 
     private final String[] colorPalette = {
             "#3498db", "#2ecc71", "#9b59b6", "#e74c3c", "#f39c12",
@@ -92,13 +96,9 @@ public class FrontProduit {
         executorService = Executors.newSingleThreadExecutor();
         categorieService = new CategorieService();
 
-        // Charger toutes les catégories
         loadCategories();
-
-        // Charger tous les produits par défaut
         loadAllProduits();
 
-        // Configurer les actions du ComboBox
         categorieComboBox.setOnAction(event -> {
             Category selectedCategory = categorieComboBox.getSelectionModel().getSelectedItem();
             if (selectedCategory != null) {
@@ -107,9 +107,9 @@ public class FrontProduit {
                 loadAllProduits();
             }
         });
-        // Add listener to search field for real-time filtering
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            handleSearch();  // <-- utiliser ta fonction de recherche déjà écrite
+            handleSearch();
         });
     }
 
@@ -117,9 +117,7 @@ public class FrontProduit {
         List<Category> categories = categorieService.getAll();
         categorieComboBox.getItems().clear();
         categorieComboBox.getItems().addAll(categories);
-
-        // Ajouter une option "Toutes les catégories"
-        categorieComboBox.getItems().add(0, new Category(0, "Toutes les catégories", ""));
+        categorieComboBox.getItems().addFirst(new Category(0, "Toutes les catégories", ""));
     }
 
     private void loadAllProduits() {
@@ -133,7 +131,6 @@ public class FrontProduit {
     public void loadProductsByCategory(int categoryId) {
         selectedCategoryId = categoryId;
 
-        // Sélectionner la catégorie dans le ComboBox
         for (Category cat : categorieComboBox.getItems()) {
             if (cat.getId() == categoryId) {
                 categorieComboBox.getSelectionModel().select(cat);
@@ -141,15 +138,12 @@ public class FrontProduit {
             }
         }
 
-        // Filtrer les produits par catégorie
-        List<Produit> filteredProduits = produitService.getAll().stream()
+        List<Produit> filteredProduits = allProduits.stream()
                 .filter(p -> p.getCategorie() == categoryId)
                 .collect(Collectors.toList());
 
-        // Afficher les produits filtrés
         displayProduits(filteredProduits);
 
-        // Mettre à jour les informations d'affichage
         Category category = categorieService.getById(categoryId);
         if (category != null) {
             lblHeaderTitle.setText("Produits - " + category.getName());
@@ -174,36 +168,85 @@ public class FrontProduit {
         }
     }
 
+    private ImageView loadProductImage(Produit produit) {
+        try {
+            String imagePath = null;
+
+            // First try to use the product's image_path if it exists
+            if (produit.getimage_path() != null && !produit.getimage_path().isEmpty()) {
+                imagePath = produit.getimage_path();
+            } else {
+                // Otherwise try to find image based on product name
+                String fileName = produit.getNom().toLowerCase().replaceAll("\\s+", "_") + ".jpg";
+                imagePath = IMAGE_BASE_PATH + fileName;
+            }
+
+            // Try to load the image
+            InputStream inputStream = getClass().getResourceAsStream(imagePath);
+            if (inputStream == null) {
+                // Try with .png extension
+                imagePath = imagePath.replace(".jpg", ".png");
+                inputStream = getClass().getResourceAsStream(imagePath);
+            }
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(IMAGE_WIDTH);
+                imageView.setFitHeight(IMAGE_HEIGHT);
+                imageView.setPreserveRatio(true);
+                return imageView;
+            }
+
+            return null; // Image not found
+        } catch (Exception e) {
+            System.err.println("Could not load image for product: " + produit.getNom());
+            return null;
+        }
+    }
+
     private VBox createProduitCard(Produit produit) {
         VBox card = new VBox();
         card.setAlignment(Pos.CENTER);
         card.setSpacing(10);
-        card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+        card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; " +
+                "-fx-border-radius: 8; -fx-background-radius: 8; " +
+                "-fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 3);");
         card.setPrefWidth(220);
         card.setPrefHeight(300);
 
-        // Créer un rectangle coloré avec les premières lettres du produit
         StackPane iconContainer = new StackPane();
-        iconContainer.setPrefHeight(120);
-        iconContainer.setPrefWidth(180);
+        iconContainer.setPrefHeight(IMAGE_HEIGHT);
+        iconContainer.setPrefWidth(IMAGE_WIDTH);
 
-        // Rectangle coloré
-        String randomColor = colorPalette[Math.abs(produit.getNom().hashCode()) % colorPalette.length];
-        Rectangle rectangle = new Rectangle(180, 120);
-        rectangle.setFill(Color.web(randomColor));
-        rectangle.setArcWidth(10);
-        rectangle.setArcHeight(10);
+        // Try to load product image
+        ImageView productImage = loadProductImage(produit);
 
-        // Premières lettres du produit
-        String initialLetters = getInitials(produit.getNom());
-        Label initialsLabel = new Label(initialLetters);
-        initialsLabel.setFont(Font.font("System", FontWeight.BOLD, 36));
-        initialsLabel.setTextFill(Color.WHITE);
-        initialsLabel.setTextAlignment(TextAlignment.CENTER);
+        if (productImage != null) {
+            // Add rounded corner effect to image
+            Rectangle clip = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            clip.setArcWidth(15);
+            clip.setArcHeight(15);
+            productImage.setClip(clip);
+            iconContainer.getChildren().add(productImage);
+        } else {
+            // Fallback to initials system if no image is available
+            String randomColor = colorPalette[Math.abs(produit.getNom().hashCode()) % colorPalette.length];
+            Rectangle rectangle = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+            rectangle.setFill(Color.web(randomColor));
+            rectangle.setArcWidth(15);
+            rectangle.setArcHeight(15);
 
-        iconContainer.getChildren().addAll(rectangle, initialsLabel);
+            String initialLetters = getInitials(produit.getNom());
+            Label initialsLabel = new Label(initialLetters);
+            initialsLabel.setFont(Font.font("System", FontWeight.BOLD, 36));
+            initialsLabel.setTextFill(Color.WHITE);
+            initialsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        // Nom du produit
+            iconContainer.getChildren().addAll(rectangle, initialsLabel);
+        }
+
+        // Product name
         Label nameLabel = new Label(produit.getNom());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
         nameLabel.setTextFill(Color.web("#2c3e50"));
@@ -211,12 +254,12 @@ public class FrontProduit {
         nameLabel.setTextAlignment(TextAlignment.CENTER);
         nameLabel.setMaxWidth(180);
 
-        // Prix du produit
+        // Product price
         Label priceLabel = new Label(String.format("%.2f €", produit.getPrix()));
         priceLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
         priceLabel.setTextFill(Color.web("#e74c3c"));
 
-        // Afficher la disponibilité
+        // Show availability
         HBox availabilityBox = new HBox();
         availabilityBox.setAlignment(Pos.CENTER);
         availabilityBox.setSpacing(5);
@@ -230,14 +273,39 @@ public class FrontProduit {
 
         availabilityBox.getChildren().addAll(statusCircle, statusLabel);
 
-        // Bouton pour voir les détails du produit
+        // Button to view product details
         Button viewDetailsBtn = new Button("Voir détails");
-        viewDetailsBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        viewDetailsBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                "-fx-background-radius: 5; -fx-cursor: hand;");
         viewDetailsBtn.setPrefWidth(150);
         viewDetailsBtn.setOnAction(event -> viewProductDetails(produit.getId()));
 
-        // Ajouter les éléments à la carte
+        // Add hover effect to button
+        viewDetailsBtn.setOnMouseEntered(e ->
+                viewDetailsBtn.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; " +
+                        "-fx-background-radius: 5; -fx-cursor: hand;")
+        );
+        viewDetailsBtn.setOnMouseExited(e ->
+                viewDetailsBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                        "-fx-background-radius: 5; -fx-cursor: hand;")
+        );
+
+        // Add all elements to card
         card.getChildren().addAll(iconContainer, nameLabel, priceLabel, availabilityBox, viewDetailsBtn);
+
+        // Add hover effect to entire card
+        card.setOnMouseEntered(e ->
+                card.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #3498db; " +
+                        "-fx-border-radius: 8; -fx-background-radius: 8; " +
+                        "-fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.3), 10, 0, 0, 5); " +
+                        "-fx-cursor: hand;")
+        );
+        card.setOnMouseExited(e ->
+                card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; " +
+                        "-fx-border-radius: 8; -fx-background-radius: 8; " +
+                        "-fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 3);")
+        );
+        card.setOnMouseClicked(event -> viewProductDetails(produit.getId()));
 
         return card;
     }
@@ -249,17 +317,20 @@ public class FrontProduit {
     }
 
     private String getInitials(String name) {
+        if (name == null || name.isEmpty()) {
+            return "??";
+        }
+
         StringBuilder initials = new StringBuilder();
         String[] words = name.split("\\s+");
 
         for (String word : words) {
             if (!word.isEmpty()) {
                 initials.append(Character.toUpperCase(word.charAt(0)));
-                if (initials.length() >= 2) break;  // Maximum 2 caractères
+                if (initials.length() >= 2) break;
             }
         }
 
-        // Si on n'a qu'une seule lettre, on ajoute la deuxième lettre du premier mot
         if (initials.length() == 1 && words[0].length() > 1) {
             initials.append(Character.toUpperCase(words[0].charAt(1)));
         }
@@ -272,9 +343,8 @@ public class FrontProduit {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/front/details.fxml"));
             Parent root = loader.load();
 
-            // Transmettre l'ID du produit au contrôleur de détails
             FrontDetails controller = loader.getController();
-            controller.setProduitId(produitId); // Appel direct sans réflexion
+            controller.setProduitId(produitId);
 
             Stage stage = (Stage) produitsContainer.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -290,7 +360,6 @@ public class FrontProduit {
         String searchTerm = searchField.getText().toLowerCase().trim();
 
         if (searchTerm.isEmpty()) {
-            // Si la recherche est vide, on affiche tous les produits ou ceux de la catégorie sélectionnée
             if (selectedCategoryId != null) {
                 loadProductsByCategory(selectedCategoryId);
             } else {
@@ -302,7 +371,6 @@ public class FrontProduit {
         List<Produit> searchResults;
 
         if (selectedCategoryId != null) {
-            // Recherche dans la catégorie sélectionnée
             searchResults = allProduits.stream()
                     .filter(p -> p.getCategorie() == selectedCategoryId)
                     .filter(p -> p.getNom().toLowerCase().contains(searchTerm) ||
@@ -315,7 +383,6 @@ public class FrontProduit {
                         "\" dans la catégorie " + category.getName() + " (" + searchResults.size() + ")");
             }
         } else {
-            // Recherche dans tous les produits
             searchResults = allProduits.stream()
                     .filter(p -> p.getNom().toLowerCase().contains(searchTerm) ||
                             p.getDescription().toLowerCase().contains(searchTerm))
@@ -344,7 +411,7 @@ public class FrontProduit {
     @FXML
     private void handleRetourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/front/accueil.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/front/accueil.fxml")));
             Stage stage = (Stage) btnAccueil.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -353,9 +420,11 @@ public class FrontProduit {
             System.err.println("Erreur de navigation vers l'accueil: " + e.getMessage());
         }
     }
+
     public void setCategorieId(int categoryId) {
         loadProductsByCategory(categoryId);
     }
+
     @FXML
     private void handleVoiceSearch() {
         if (!isRecording) {
@@ -371,7 +440,6 @@ public class FrontProduit {
 
         executorService.submit(() -> {
             try {
-                // Audio format configuration
                 AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
                 DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
@@ -383,17 +451,14 @@ public class FrontProduit {
                     return;
                 }
 
-                // Get and start the microphone capture line
                 microphoneLine = (TargetDataLine) AudioSystem.getLine(info);
                 microphoneLine.open(format);
                 microphoneLine.start();
 
                 isRecording = true;
 
-                // Create a temporary file for the audio
                 File audioFile = File.createTempFile("voice_search", ".wav");
 
-                // Record audio to file
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 int bufferSize = 4096;
                 byte[] buffer = new byte[bufferSize];
@@ -406,15 +471,12 @@ public class FrontProduit {
                         }
                     }
 
-                    // Convert to audio file
                     byte[] audioData = out.toByteArray();
                     try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
                          AudioInputStream audioInputStream = new AudioInputStream(bais, format, audioData.length)) {
                         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
                     }
 
-                    // Here, you would typically send the audio file to a speech recognition service
-                    // For demonstration, we'll simulate a result
                     simulateVoiceRecognitionResult(audioFile);
 
                 } finally {
@@ -438,22 +500,15 @@ public class FrontProduit {
     }
 
     private void simulateVoiceRecognitionResult(File audioFile) {
-        // In a real implementation, you would send this file to a speech-to-text service
-        // For now, we'll simulate a delay and then use a mock result
-
         try {
-            Thread.sleep(2000); // Simulate processing time
+            Thread.sleep(2000);
 
-            // For demo, let's pretend we recognized "smartphone"
             String recognizedText = "smartphone";
 
             Platform.runLater(() -> {
                 searchField.setText(recognizedText);
                 handleSearch();
                 voicePromptLabel.setText("Recherche pour: " + recognizedText);
-
-                // In a real implementation, you would integrate with a speech recognition API
-                // such as Google Cloud Speech-to-Text, IBM Watson, or Mozilla DeepSpeech
 
                 showAlert("Reconnaissance vocale",
                         "Texte reconnu: " + recognizedText);
