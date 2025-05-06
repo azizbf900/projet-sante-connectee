@@ -52,7 +52,7 @@
                         <!-- Nom du produit -->
                         <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
                             <Label text="Nom du produit *" styleClass="form-label"/>
-                            <TextField fx:id="nomField" promptText="Ex: MacBook Pro 14&quot;" styleClass="custom-text-field"/>
+                            <TextField fx:id="nomField" promptText="Ex: Aerosol&quot;" styleClass="custom-text-field"/>
                         </VBox>
 
                         <!-- Catégorie -->

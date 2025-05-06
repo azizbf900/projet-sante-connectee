@@ -22,7 +22,7 @@
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.FrontCategorie">
     <stylesheets>
-        <URL value="@../styles/styles.css"/>
+        <URL value="@../styles/categorie.css"/>
     </stylesheets>
 
     <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="5.0" AnchorPane.bottomAnchor="0.0"

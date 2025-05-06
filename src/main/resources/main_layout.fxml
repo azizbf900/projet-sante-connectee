@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<HBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.MainLayoutController"
-      prefHeight="800.0" prefWidth="1200.0"
-      styleClass="main-container"
-      stylesheets="/styles/styles.css">
+<HBox prefHeight="800.0" prefWidth="1200.0" styleClass="main-container"
+      stylesheets="@styles/styles.css"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.MainLayoutController">
 
-    <!-- Sidebar directement intégrée (au lieu d'utiliser fx:include) -->
-    <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250" spacing="10">
+    <!-- Sidebar -->
+    <VBox fx:id="sidebar" prefWidth="250" spacing="10" styleClass="sidebar">
         <padding>
             <Insets top="20" right="10" bottom="20" left="10" />
         </padding>
 
-        <!-- Logo ou titre -->
+        <!-- Logo -->
         <StackPane styleClass="logo-container">
             <Text styleClass="app-title" text="VitaLink" />
         </StackPane>
 
-        <!-- Navigation items -->
-        <HBox fx:id="btnDashboard" styleClass="nav-button">
+        <!-- Navigation Buttons -->
+        <HBox fx:id="btnDashboard" styleClass="nav-button" onMouseClicked="#handleDashboardClick">
             <Label text="Dashboard" />
         </HBox>
 
-        <HBox fx:id="btnUsers" styleClass="nav-button">
+        <HBox fx:id="btnUsers" styleClass="nav-button" onMouseClicked="#handleUsersClick">
             <Label text="Utilisateurs" />
         </HBox>
 
-        <HBox fx:id="btnRendezVous" styleClass="nav-button">
+        <HBox fx:id="btnRendezVous" styleClass="nav-button" onMouseClicked="#handleRendezVousClick">
             <Label text="Rendez-vous" />
         </HBox>
 
-        <HBox fx:id="btnProduits" styleClass="nav-button">
+        <HBox fx:id="btnProduits" styleClass="nav-button" onMouseClicked="#handleProduitsClick">
             <Label text="Produits" />
         </HBox>
 
-        <HBox fx:id="btnEvents" styleClass="nav-button">
+        <HBox fx:id="btnEvents" styleClass="nav-button" onMouseClicked="#handleEventsClick">
             <Label text="Événements" />
         </HBox>
 
-        <HBox fx:id="btnBlogs" styleClass="nav-button">
+        <HBox fx:id="btnBlogs" styleClass="nav-button" onMouseClicked="#handleBlogsClick">
             <Label text="Blogs" />
         </HBox>
 
         <VBox VBox.vgrow="ALWAYS" />
 
-        <HBox fx:id="btnSettings" styleClass="nav-button">
+        <HBox fx:id="btnSettings" styleClass="nav-button" onMouseClicked="#handleSettingsClick">
             <Label text="Paramètres" />
         </HBox>
 
-        <HBox fx:id="btnLogout" styleClass="nav-button, logout-button">
+        <HBox fx:id="btnLogout" styleClass="nav-button logout-button" onMouseClicked="#handleLogoutClick">
             <Label text="Déconnexion" />
         </HBox>
     </VBox>
 
-    <!-- Conteneur de contenu principal -->
+    <!-- Main Content Area -->
     <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
-        <!-- Le contenu spécifique sera chargé dynamiquement ici -->
+        <!-- Views will be dynamically loaded here -->
     </StackPane>
-
 </HBox>

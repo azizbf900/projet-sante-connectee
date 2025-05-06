@@ -71,6 +71,21 @@ public class FrontProduit {
     @FXML
     private Label voicePromptLabel;
 
+    @FXML
+    private TextField minPriceField;
+
+    @FXML
+    private TextField maxPriceField;
+
+    @FXML
+    private Slider priceRangeSlider;
+
+    @FXML
+    private Label priceRangeLabel;
+
+    @FXML
+    private Button btnResetPrice;
+
     private ProduitService produitService;
     private ExecutorService executorService;
     private boolean isRecording = false;
@@ -78,6 +93,9 @@ public class FrontProduit {
     private CategorieService categorieService;
     private List<Produit> allProduits;
     private Integer selectedCategoryId = null;
+
+    private double currentMaxPrice = 100.0;
+    private double currentMinPrice = 0.0;
 
     // Constants for image handling
     private static final String IMAGE_BASE_PATH = "/images/produits/";
@@ -98,6 +116,7 @@ public class FrontProduit {
 
         loadCategories();
         loadAllProduits();
+        setupPriceFiltering();
 
         categorieComboBox.setOnAction(event -> {
             Category selectedCategory = categorieComboBox.getSelectionModel().getSelectedItem();
@@ -111,6 +130,62 @@ public class FrontProduit {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             handleSearch();
         });
+    }
+
+    private void setupPriceFiltering() {
+        // Setup price range slider
+        priceRangeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            currentMaxPrice = newVal.doubleValue();
+            updatePriceRangeLabel();
+            handleSearch();
+        });
+
+        // Setup min price field
+        minPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                double value = Double.parseDouble(newVal);
+                if (value >= 0 && value <= currentMaxPrice) {
+                    currentMinPrice = value;
+                    updatePriceRangeLabel();
+                    handleSearch();
+                }
+            } catch (NumberFormatException e) {
+                // Invalid input, ignore
+            }
+        });
+
+        // Setup max price field
+        maxPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                double value = Double.parseDouble(newVal);
+                if (value >= currentMinPrice) {
+                    currentMaxPrice = value;
+                    priceRangeSlider.setValue(value);
+                    updatePriceRangeLabel();
+                    handleSearch();
+                }
+            } catch (NumberFormatException e) {
+                // Invalid input, ignore
+            }
+        });
+
+        // Initial price range label
+        updatePriceRangeLabel();
+    }
+
+    private void updatePriceRangeLabel() {
+        priceRangeLabel.setText(String.format("Gamme de prix: %.2f€ - %.2f€", currentMinPrice, currentMaxPrice));
+    }
+
+    @FXML
+    private void resetPriceFilter() {
+        currentMinPrice = 0.0;
+        currentMaxPrice = 100.0;
+        minPriceField.clear();
+        maxPriceField.clear();
+        priceRangeSlider.setValue(100.0);
+        updatePriceRangeLabel();
+        handleSearch();
     }
 
     private void loadCategories() {
@@ -359,40 +434,50 @@ public class FrontProduit {
     private void handleSearch() {
         String searchTerm = searchField.getText().toLowerCase().trim();
 
-        if (searchTerm.isEmpty()) {
-            if (selectedCategoryId != null) {
-                loadProductsByCategory(selectedCategoryId);
-            } else {
-                loadAllProduits();
-            }
-            return;
+        List<Produit> filteredProducts = allProduits.stream()
+                .filter(p -> p.getPrix() >= currentMinPrice && p.getPrix() <= currentMaxPrice)
+                .filter(p -> {
+                    if (searchTerm.isEmpty()) return true;
+                    return p.getNom().toLowerCase().contains(searchTerm) ||
+                            p.getDescription().toLowerCase().contains(searchTerm);
+                })
+                .filter(p -> {
+                    if (selectedCategoryId == null || selectedCategoryId == 0) return true;
+                    return p.getCategorie() == selectedCategoryId;
+                })
+                .collect(Collectors.toList());
+
+        displayProduits(filteredProducts);
+        updateResultInfo(filteredProducts.size(), searchTerm);
+    }
+
+    private void updateResultInfo(int resultCount, String searchTerm) {
+        StringBuilder info = new StringBuilder();
+
+        if (!searchTerm.isEmpty()) {
+            info.append("Résultats pour \"").append(searchTerm).append("\"");
         }
 
-        List<Produit> searchResults;
-
-        if (selectedCategoryId != null) {
-            searchResults = allProduits.stream()
-                    .filter(p -> p.getCategorie() == selectedCategoryId)
-                    .filter(p -> p.getNom().toLowerCase().contains(searchTerm) ||
-                            p.getDescription().toLowerCase().contains(searchTerm))
-                    .collect(Collectors.toList());
-
+        if (selectedCategoryId != null && selectedCategoryId != 0) {
             Category category = categorieService.getById(selectedCategoryId);
             if (category != null) {
-                lblResultInfo.setText("Résultats de recherche pour \"" + searchTerm +
-                        "\" dans la catégorie " + category.getName() + " (" + searchResults.size() + ")");
+                if (!info.isEmpty()) info.append(" dans ");
+                info.append("Catégorie: ").append(category.getName());
             }
-        } else {
-            searchResults = allProduits.stream()
-                    .filter(p -> p.getNom().toLowerCase().contains(searchTerm) ||
-                            p.getDescription().toLowerCase().contains(searchTerm))
-                    .collect(Collectors.toList());
-
-            lblResultInfo.setText("Résultats de recherche pour \"" + searchTerm + "\" (" + searchResults.size() + " produit(s) trouvé(s))");
-            lblHeaderTitle.setText("Recherche Globale");
         }
 
-        displayProduits(searchResults);
+        if (currentMinPrice > 0 || currentMaxPrice < 100) {
+            if (!info.isEmpty()) info.append(" | ");
+            info.append(String.format("Prix: %.2f€ - %.2f€", currentMinPrice, currentMaxPrice));
+        }
+
+        if (!info.isEmpty()) {
+            info.append(" (").append(resultCount).append(" produit(s))");
+        } else {
+            info.append("Affichage de tous les produits (").append(resultCount).append(")");
+        }
+
+        lblResultInfo.setText(info.toString());
     }
 
     @FXML
